@@ -82,6 +82,7 @@ Si el usuario se traba, Claude escala la ayuda de a poco: **pista → pista más
 - Al cerrar un hito: **mini-quiz** de 3–5 preguntas sobre sus mecanismos.
 - Al cerrar cada hito (o paso relevante): actualizar **`docs/bitacora_aprendizaje.md`** (notas de estudio del usuario: qué se hizo, por qué y cómo se llama, más las respuestas modelo del quiz).
 - Cuando el usuario pida explicar código línea por línea: guardarlo en **`docs/aprendizaje/NN_tema.md`** y agregarlo al índice `docs/aprendizaje/README.md`.
+- **Cada comando que Claude le entregue al usuario** debe agregarse también a **`docs/Ejecutables/`**, en el archivo de su herramienta (01_uv, 02_git, 03_ruff, 04_pytest, 05_pre-commit, 06_powershell; crear `NN_herramienta.md` nuevo si no existe y sumarlo al `README.md` de esa carpeta). Formato: título corto + bloque ```powershell + una línea de explicación.
 - **Perfil del usuario:** fuerte en el dominio del negocio eléctrico; en formación en Python. **Aún no conoce POO**: enseñarla paso a paso cuando aparezca (H2 pydantic-settings, H3 clientes de API, H6 pandera) y no usar clases donde bastan funciones.
 
 ### 2.3 Reglas técnicas
@@ -524,8 +525,10 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` hecho
   - [x] H1.3 `ruff` (lint + format) configurado en `pyproject.toml` (pendiente menor: reemplazar los comentarios TODO de I/B/PD)
   - [x] H1.4 `pytest` + primer test: RN-01 `domain/bloques.py` con TDD (entrada = hora de inicio 0–23). 9 tests en verde. El usuario detectó y corrigió un caso de negocio mal escrito en el test (23→A). Nota H4: vectorizar con un dict de 24 horas + `.map()`, no `.apply()`
   - Extras hechos: `.gitattributes` (LF), `known-first-party = ["ppa_pipeline"]` en isort
-  - [ ] H1.5 `pre-commit`
-  - [ ] H1.6 Repositorio en GitHub + CI (GitHub Actions: lint + tests)
+  - [x] H1.5 `pre-commit` (commit b276aa3). Pendiente menor: agregar `default_stages: [pre-commit]` para que los hooks no corran también en commit-msg
+  - [~] H1.6 Repositorio **privado** en GitHub (decisión del usuario 2026-09-27: publicar más adelante; antes de hacerlo público, repetir la revisión previa: `git log --all -- OLD` + `git grep` de términos sensibles) + CI (GitHub Actions: `uv sync --locked`, ruff, pytest). Verificado: `OLD/` nunca se commiteó y no hay credenciales en HEAD
+  - [ ] H1.7 `mypy` (tipado estático; detecta `warninr` y funciones redefinidas del legado) en pre-commit y CI
+  - Carpeta `docs/Ejecutables/` (versionada por decisión del usuario; el `Ejecutables.md` antiguo fue borrado)
 - [ ] H2 — Configuración y Observabilidad
 - [ ] H3 — Ingesta Automatizada → Bronze
 - [ ] H4 — Silver: Retiros Conformados

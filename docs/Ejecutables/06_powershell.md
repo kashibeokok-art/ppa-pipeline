@@ -1,0 +1,17 @@
+# PowerShell: atajos del sistema
+
+## Crear la estructura de módulos por capa (Medallion)
+```powershell
+"extract","bronze","silver","domain","quality","load" | % { New-Item -ItemType File -Force "src/ppa_pipeline/$_/__init__.py" }
+```
+Cómo se lee:
+- `"a","b",...` es una lista de nombres.
+- `|` pasa cada nombre al comando siguiente (*pipeline*).
+- `%` es un alias de `ForEach-Object`: "para cada elemento, haz…".
+- `$_` es el elemento actual.
+- `New-Item -ItemType File -Force` crea el archivo y las carpetas que falten.
+
+## Ver archivos, incluidos los ocultos (como `.git`)
+```powershell
+Get-ChildItem -Force
+```
