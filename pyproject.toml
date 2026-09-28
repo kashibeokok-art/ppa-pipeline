@@ -15,3 +15,22 @@ ppa-pipeline = "ppa_pipeline:main"
 [build-system]
 requires = ["uv_build>=0.12.19,<0.13.0"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16.9",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+extend-exclude = ["OLD"]
+
+[tool.ruff.lint]
+select = [
+    "E", "F",   # errores básicos y de Python
+    "I",        # TODO: busca en la documentación qué hace la regla "I"
+    "B",        # TODO: y "B"
+    "UP",       # modernizar sintaxis a la versión de Python
+    "PD",       # TODO: esta es específica para ingeniería de datos, ¿de qué librería?
+]

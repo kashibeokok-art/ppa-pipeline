@@ -190,8 +190,10 @@ Severidad: 🔴 crítico · 🟠 alto · 🟡 medio · 🔵 estilo/mantenibilida
 ### 5.2 Bugs confirmados o probables
 - 🔴 **Reintentos sin `break`** (`main_mensual.py:249-288`): cada paso exitoso se ejecuta 3 veces. Si falla, el error se registra y el pipeline **sigue** con datos incompletos. [H3, H9]
 - 🔴 **Carga no atómica** (`funciones.subir_carpeta_a_sql`): `to_sql(append)` archivo por archivo, sin transacción. Si falla a la mitad, el mes queda cargado a medias y la verificación "¿existe (Anio, Mes)?" lo **salta para siempre**. [H8]
-- 🟠 `logging.warninr` (`funciones.py:1601`): el error de tipeo lanza `AttributeError` cuando un archivo no trae fecha. [H1: un linter lo detecta]
-- 🟠 `subir_barras_a_sql` está **definida dos veces** en `funciones.py` (líneas 2081 y 2321). La segunda pisa a la primera. [H1: el linter F811 lo detecta]
+- 🟠 `logging.warninr` (`funciones.py:1601`): el error de tipeo lanza `AttributeError` cuando un archivo no trae fecha. [H1: lo detecta **mypy**, no ruff; verificado 2026-09-27]
+- 🟠 `subir_barras_a_sql` está **definida dos veces** en `funciones.py` (líneas 2081 y 2321). La segunda pisa a la primera. [H1: lo detecta **mypy** (`no-redef`); ruff F811 no lo marcó]
+- 🔴 `Homologar_Retiro.py` llama 42 veces a `safe_prent`, que no existe (F821): el script se cae con `NameError`. Detectado por ruff (2026-09-27).
+- Ruff sobre `OLD/` (2026-09-27): 64 errores `F` (45 F821, 15 F401, 3 F841, 1 F811) y 246 de `E/B/UP/PD/I` (183 E501, 14 I001, 11 B007, 9 PD015, 8 B905, 3 PD002, 1 B006, 2 B008…).
 - 🟠 En `main_mensual_iny.py:195` el `try` está a nivel de módulo, fuera del `if __name__`, y `subir_iny_a_sql` corre aunque el procesamiento haya fallado. [H9]
 - 🟡 Feriados: `df['ParsedDate'].isin(holidays.CL(...))` funciona en pandas 2.3.3 pero está **deprecado** (`FutureWarning`). En una versión futura todos los feriados pasarán a contarse como hábiles **sin lanzar error** (verificado 2026-09-27). [H4]
 - 🟡 `pivot_table` usa métricas float como **índice** (`funciones.py:1486`): frágil y puede duplicar filas. [H4]
@@ -441,6 +443,9 @@ Las fases H0–H2 son prerequisito. Luego se recomienda avanzar **por dominio de
 | Double Counting | Una medida repetida en varias filas por mezclar granularidades se suma de más | H8, H10 | |
 | Requirements Consistency Check | Cada regla sirve a una pregunta y cada pregunta tiene sus reglas | H0 | ✅ |
 | YAGNI | *You Aren't Gonna Need It*: no construir lo que nadie pidió | H0 | ✅ |
+| Static Analysis / Linting | Revisar el código sin ejecutarlo (ruff: F = errores lógicos, E = estilo PEP 8, I = imports, B = bugs sutiles, UP = sintaxis moderna, PD = pandas) | H1 | ✅ |
+| Defense in Depth | Varias herramientas complementarias: ruff (sintaxis/patrones), mypy (tipos/atributos), pytest (lógica) | H1 | |
+| Mutable Default Argument | Un `[]`/`{}` por defecto se comparte entre llamadas (B006) | H1 | ✅ |
 | Conformed Dimension | Dimensión compartida (empresa, fecha, bloque) que permite cruzar dominios | H0, H8 | ✅ (diseño) |
 | Silent Nulls | Un cruce que falla sin error y deja valores nulos (ej. retiro sin CMg) | H6 | |
 | Documented Assumption | Supuesto explícito y vigente hasta que alguien lo corrija | H0 | ✅ |
