@@ -81,6 +81,8 @@ Si el usuario se traba, Claude escala la ayuda de a poco: **pista → pista más
 - Hacer **preguntas de verificación** ("¿qué pasa si este paso falla a la mitad?") antes de dar respuestas.
 - Al cerrar un hito: **mini-quiz** de 3–5 preguntas sobre sus mecanismos.
 - Al cerrar cada hito (o paso relevante): actualizar **`docs/bitacora_aprendizaje.md`** (notas de estudio del usuario: qué se hizo, por qué y cómo se llama, más las respuestas modelo del quiz).
+- Cuando el usuario pida explicar código línea por línea: guardarlo en **`docs/aprendizaje/NN_tema.md`** y agregarlo al índice `docs/aprendizaje/README.md`.
+- **Perfil del usuario:** fuerte en el dominio del negocio eléctrico; en formación en Python. **Aún no conoce POO**: enseñarla paso a paso cuando aparezca (H2 pydantic-settings, H3 clientes de API, H6 pandera) y no usar clases donde bastan funciones.
 
 ### 2.3 Reglas técnicas
 1. **Por partes.** Una tarea por vez. Cada parte termina funcionando y probada.

@@ -243,15 +243,16 @@ En VS Code también puedes usar el panel **Testing** (ícono del matraz 🧪).
 Un avance de cómo se ve (se verá en H2 y H3):
 
 ```python
-class ClienteCEN:                          # "molde" para crear objetos
-    def __init__(self, api_key: str):      # se ejecuta al crear el objeto
-        self.api_key = api_key             # el objeto GUARDA su clave (estado)
+class ClienteCEN:  # "molde" para crear objetos
+    def __init__(self, api_key: str):  # se ejecuta al crear el objeto
+        self.api_key = api_key  # el objeto GUARDA su clave (estado)
 
-    def obtener_cmg(self, fecha: str):     # método: función que pertenece al objeto
-        ...                                # usa self.api_key sin pedirla de nuevo
+    def obtener_cmg(self, fecha: str):  # método: función que pertenece al objeto
+        ...  # usa self.api_key sin pedirla de nuevo
 
-cliente = ClienteCEN(api_key="...")        # crear un objeto (una instancia)
-cliente.obtener_cmg("2026-08-01")          # usar su método
+
+cliente = ClienteCEN(api_key="...")  # crear un objeto (una instancia)
+cliente.obtener_cmg("2026-08-01")  # usar su método
 ```
 
 **Dónde aparece POO en el proyecto:**

@@ -1,4 +1,4 @@
-**ADR-001:** 
+**ADR-001:**
 
 **Contexto:** Hay que decidir si realizar correcciones o generar el codigo desde cero.
 
