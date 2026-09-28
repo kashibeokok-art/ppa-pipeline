@@ -512,10 +512,10 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` hecho
   - [ ] Registrarse en portal.api.coordinador.cl y suscribirse a "Consulta de Datos" (SIP, Planificación) → `user_key` propia en `.env`
   - [ ] Pedir a la mesa de ayuda del CEN acceso por API a las descargas de Plabacom (`/bff/api/presigned-urls`) o una alternativa oficial
 - [~] **H1 — Proyecto Reproducible**
-  - [ ] H1.1 Instalar `uv` + `uv init --package` → `pyproject.toml`, `src/`, `.python-version`
-  - [ ] H1.2 Estructura de paquetes `src/ppa_pipeline/{extract,bronze,silver,quality,load,domain}`
-  - [ ] H1.3 `ruff` (lint + format) configurado en `pyproject.toml`
-  - [ ] H1.4 `pytest` + primer test
+  - [x] H1.1 Instalar `uv` + `uv init --package` → `pyproject.toml`, `src/`, `.python-version`
+  - [x] H1.2 Estructura de paquetes `src/ppa_pipeline/{extract,bronze,silver,quality,load,domain}`
+  - [x] H1.3 `ruff` (lint + format) configurado en `pyproject.toml` (pendiente menor: reemplazar los comentarios TODO de I/B/PD)
+  - [~] H1.4 `pytest` + primer test: RN-01 `domain/bloques.py` con TDD (entrada = hora de inicio 0–23)
   - [ ] H1.5 `pre-commit`
   - [ ] H1.6 Repositorio en GitHub + CI (GitHub Actions: lint + tests)
 - [ ] H2 — Configuración y Observabilidad
