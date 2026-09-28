@@ -74,6 +74,12 @@ Envía a GitHub los commits locales que todavía no están allá.
 git remote -v
 ```
 
+## Mover o renombrar un archivo versionado
+```powershell
+git mv <ruta_actual> <ruta_nueva>
+```
+Mueve el archivo y deja el cambio en *staging*. Git lo registra como un movimiento, no como "borrado + archivo nuevo", y se conserva su historial.
+
 ## Tipos de mensaje (Conventional Commits)
 | Prefijo | Uso |
 |---|---|

@@ -27,7 +27,13 @@ jobs:
 ```powershell
 New-Item -ItemType Directory -Force .github/workflows
 ```
-Crea `.github/workflows/`, que es donde GitHub busca los workflows.
+Crea `.github/workflows/`, que es donde GitHub busca los workflows. ⚠️ Ejecútalo desde la **raíz del proyecto**. Si lo ejecutas dentro de otra carpeta, se crea una ruta duplicada (`.github/workflows/.github/workflows/`) y GitHub **ignora el workflow sin dar ningún error**.
+
+## Verificar que el workflow está en el lugar correcto
+```powershell
+Get-ChildItem -Recurse .github
+```
+Debe mostrar solo `.github\workflows\ci.yml`.
 
 ## Verificar localmente lo mismo que hará el CI
 ```powershell

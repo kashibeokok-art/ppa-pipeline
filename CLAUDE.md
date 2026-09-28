@@ -526,7 +526,7 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` hecho
   - [x] H1.4 `pytest` + primer test: RN-01 `domain/bloques.py` con TDD (entrada = hora de inicio 0–23). 9 tests en verde. El usuario detectó y corrigió un caso de negocio mal escrito en el test (23→A). Nota H4: vectorizar con un dict de 24 horas + `.map()`, no `.apply()`
   - Extras hechos: `.gitattributes` (LF), `known-first-party = ["ppa_pipeline"]` en isort
   - [x] H1.5 `pre-commit` (commit b276aa3). Pendiente menor: agregar `default_stages: [pre-commit]` para que los hooks no corran también en commit-msg
-  - [~] H1.6 Repositorio **privado** en GitHub (decisión del usuario 2026-09-27: publicar más adelante; antes de hacerlo público, repetir la revisión previa: `git log --all -- OLD` + `git grep` de términos sensibles) + CI (GitHub Actions: `uv sync --locked`, ruff, pytest). Verificado: `OLD/` nunca se commiteó y no hay credenciales en HEAD
+  - [~] H1.6 Repositorio **público** en GitHub: https://github.com/kashibeokok-art/ppa-pipeline (el usuario lo publicó el 2026-09-27; la revisión previa estaba hecha: `OLD/` nunca se commiteó, sin credenciales en HEAD). CI (GitHub Actions: `uv sync --locked`, ruff, pytest). ⚠️ El primer push dejó el workflow en `.github/workflows/.github/workflows/ci.yml`, así que no corrió (0 ejecuciones según la API) → pendiente `git mv` a `.github/workflows/ci.yml` y confirmar ✅ en Actions
   - [ ] H1.7 `mypy` (tipado estático; detecta `warninr` y funciones redefinidas del legado) en pre-commit y CI
   - Carpeta `docs/Ejecutables/` (versionada por decisión del usuario; el `Ejecutables.md` antiguo fue borrado)
 - [ ] H2 — Configuración y Observabilidad

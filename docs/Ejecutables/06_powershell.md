@@ -15,3 +15,15 @@ Cómo se lee:
 ```powershell
 Get-ChildItem -Force
 ```
+
+## Ver una carpeta y todo su contenido (para verificar rutas)
+```powershell
+Get-ChildItem -Recurse .github
+```
+`-Recurse` entra en todas las subcarpetas. Sirve para confirmar que un archivo quedó donde debe.
+
+## Borrar una carpeta con su contenido
+```powershell
+Remove-Item -Recurse -Force <carpeta>
+```
+`-Recurse` borra también lo que hay dentro y `-Force` no pide confirmación. ⚠️ Revisa la ruta antes de ejecutarlo: no hay papelera.
