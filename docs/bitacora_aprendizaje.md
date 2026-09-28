@@ -120,7 +120,7 @@ Un proyecto de datos profesional **no empieza escribiendo código**. Empieza ent
 
 ---
 
-## H1: Proyecto Reproducible (en curso)
+## H1: Proyecto Reproducible (H1.1–H1.6 ✅; falta H1.7 mypy)
 
 ### Paso 9: Gestor de proyecto y dependencias (H1.1) ✅
 - **Qué:** `uv init --package`, que generó `pyproject.toml`, `uv.lock`, `.python-version` y la estructura `src/ppa_pipeline/`.
@@ -132,9 +132,41 @@ Un proyecto de datos profesional **no empieza escribiendo código**. Empieza ent
   3. **Punto de entrada** (*entry point*): `[project.scripts]` crea el comando `ppa-pipeline`.
 - 🧠 **Conceptos:** *Packaging*, *Lockfile*, *src layout*, *Entry Point*, *Reproducibility*.
 
+### Paso 10: Estructura por capas (H1.2) ✅
+- **Qué:** se crearon los paquetes `extract/`, `bronze/`, `silver/`, `domain/`, `quality/` y `load/`, cada uno con su `__init__.py`.
+- **Por qué:** **separación de responsabilidades**. Cada módulo hace una sola cosa. Es lo opuesto al *god module* del legado, donde probar una regla de bloques obligaba a cargar Selenium y SQL.
+- **`domain/` separado de `silver/`:** las reglas de negocio son **funciones puras**, sin pandas, archivos ni bases de datos. Eso las hace testeables, reutilizables e independientes de la tecnología (arquitectura hexagonal, *Ports & Adapters*).
+- 🧠 **Conceptos:** *Separation of Concerns*, *Domain Layer*, paquete (`__init__.py`).
+
+### Paso 11: Análisis estático con ruff (H1.3) ✅
+- **Qué:** ruff configurado en `pyproject.toml` (reglas E, F, I, B, UP y PD, con `OLD/` excluido).
+- **Por qué:** detecta errores **sin ejecutar** el código. Sobre el legado encontró 64 errores lógicos, entre ellos **42 llamadas a una función inexistente (`safe_prent`)**, que hacían caer un script completo.
+- **Lección:** cada herramienta atrapa cosas distintas (**defensa en capas**). `logging.warninr` y la función duplicada no los detecta ruff; los detecta **mypy**.
+- 🧠 **Conceptos:** *Static Analysis*, *Linting*, *Formatting*, *Mutable Default Argument*, *Explicit over Implicit* (`known-first-party`). Lección: [aprendizaje/](aprendizaje/README.md).
+
+### Paso 12: Primera regla de negocio con TDD (H1.4) ✅
+- **Qué:** RN-01 (bloques horarios) implementada en `domain/bloques.py`, con 9 tests escritos **antes** que el código.
+- **Por qué:** el test es la **especificación ejecutable** de la regla.
+- **Lección real:** el test tenía `(23, "C")`, un error de negocio. **Un test incorrecto es peor que no tener test**, porque certifica el error en verde. Los casos se derivan de la regla escrita.
+- 🧠 **Conceptos:** TDD (rojo → verde → refactor), *Boundary Value Testing*, *Guard Clause*, `Literal`, *type hints*. Lección: [01_funciones_y_tests_rn01.md](aprendizaje/01_funciones_y_tests_rn01.md).
+- **Extra:** `.gitattributes` para normalizar los finales de línea a LF (el proyecto corre en Windows y en Linux).
+
+### Paso 13: Controles antes de cada commit (H1.5) ✅
+- **Qué:** `pre-commit` con higiene de archivos, detección de claves privadas, bloqueo de archivos grandes, ruff y validación de Conventional Commits.
+- **Por qué:** ***Shift-Left***: detectar errores en segundos en tu PC, no en producción. No depender de la memoria.
+- **Lección:** los hooks sin etapa declarada corren en `pre-commit` y también en `commit-msg`; `default_stages: [pre-commit]` lo evita.
+- 🧠 **Conceptos:** *Git Hooks*, *Shift-Left*, YAML, `rev` fijado, *staging area*. Lección: [02_pre_commit_hooks.md](aprendizaje/02_pre_commit_hooks.md).
+
+### Paso 14: GitHub + Integración Continua (H1.6) ✅
+- **Qué:** repositorio **público** en `github.com/kashibeokok-art/ppa-pipeline` y un workflow de GitHub Actions (`uv sync --locked` → ruff → pytest) en un Linux limpio. Primera ejecución: ✅.
+- **Por qué:** demuestra **reproducibilidad real**, corre los tests completos y deja **evidencia pública** de calidad.
+- **Antes de publicar:** se revisó el **historial completo** (`git log --all -- OLD`, `git grep`). `OLD/` nunca entró.
+- **Lección real:** el workflow quedó en una ruta duplicada y GitHub lo **ignoró sin dar error** (0 ejecuciones). **Verificar el resultado, no la acción.**
+- 🧠 **Conceptos:** repositorio remoto, CI, *workflow*, *runner*, `--locked`, fallo silencioso, *Pre-publication Review*. Lección: [03_github_y_ci.md](aprendizaje/03_github_y_ci.md).
+
 ### Próximas tareas
-- **H1.2:** estructura de módulos `extract/`, `bronze/`, `silver/`, `domain/`, `quality/`, `load/` (*Separation of Concerns*).
-- **H1.3 a H1.6:** `ruff`, `pytest`, `pre-commit` y CI en GitHub.
+- **H1.7:** `mypy` (tipado estático), en pre-commit y CI.
+- **H2:** configuración (`.env`, `pydantic-settings`, primera **clase**) y observabilidad (logging con `run_id`).
 
 ---
 

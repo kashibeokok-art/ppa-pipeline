@@ -74,6 +74,12 @@ Envía a GitHub los commits locales que todavía no están allá.
 git remote -v
 ```
 
+## Ver qué archivos entraron realmente en el último commit
+```powershell
+git show --stat HEAD
+```
+Lista los archivos del último commit, con cuántas líneas cambiaron en cada uno. Sirve para confirmar que el commit contiene lo que dice su mensaje.
+
 ## Mover o renombrar un archivo versionado
 ```powershell
 git mv <ruta_actual> <ruta_nueva>

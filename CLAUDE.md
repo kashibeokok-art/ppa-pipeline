@@ -82,6 +82,7 @@ Si el usuario se traba, Claude escala la ayuda de a poco: **pista → pista más
 - Al cerrar un hito: **mini-quiz** de 3–5 preguntas sobre sus mecanismos.
 - Al cerrar cada hito (o paso relevante): actualizar **`docs/bitacora_aprendizaje.md`** (notas de estudio del usuario: qué se hizo, por qué y cómo se llama, más las respuestas modelo del quiz).
 - Cuando el usuario pida explicar código línea por línea: guardarlo en **`docs/aprendizaje/NN_tema.md`** y agregarlo al índice `docs/aprendizaje/README.md`.
+- **SIEMPRE, al cerrar cada paso, sin esperar a que el usuario lo pida:** actualizar `docs/aprendizaje/` (lección nueva `NN_tema.md` + índice), `docs/bitacora_aprendizaje.md` y `docs/Ejecutables/`.
 - **Cada comando que Claude le entregue al usuario** debe agregarse también a **`docs/Ejecutables/`**, en el archivo de su herramienta (01_uv, 02_git, 03_ruff, 04_pytest, 05_pre-commit, 06_powershell; crear `NN_herramienta.md` nuevo si no existe y sumarlo al `README.md` de esa carpeta). Formato: título corto + bloque ```powershell + una línea de explicación.
 - **Perfil del usuario:** fuerte en el dominio del negocio eléctrico; en formación en Python. **Aún no conoce POO**: enseñarla paso a paso cuando aparezca (H2 pydantic-settings, H3 clientes de API, H6 pandera) y no usar clases donde bastan funciones.
 
@@ -526,7 +527,8 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` hecho
   - [x] H1.4 `pytest` + primer test: RN-01 `domain/bloques.py` con TDD (entrada = hora de inicio 0–23). 9 tests en verde. El usuario detectó y corrigió un caso de negocio mal escrito en el test (23→A). Nota H4: vectorizar con un dict de 24 horas + `.map()`, no `.apply()`
   - Extras hechos: `.gitattributes` (LF), `known-first-party = ["ppa_pipeline"]` en isort
   - [x] H1.5 `pre-commit` (commit b276aa3). Pendiente menor: agregar `default_stages: [pre-commit]` para que los hooks no corran también en commit-msg
-  - [~] H1.6 Repositorio **público** en GitHub: https://github.com/kashibeokok-art/ppa-pipeline (el usuario lo publicó el 2026-09-27; la revisión previa estaba hecha: `OLD/` nunca se commiteó, sin credenciales en HEAD). CI (GitHub Actions: `uv sync --locked`, ruff, pytest). ⚠️ El primer push dejó el workflow en `.github/workflows/.github/workflows/ci.yml`, así que no corrió (0 ejecuciones según la API) → pendiente `git mv` a `.github/workflows/ci.yml` y confirmar ✅ en Actions
+  - [x] H1.6 Repositorio **público** en GitHub: https://github.com/kashibeokok-art/ppa-pipeline. CI ✅ (run 36370506292, commit 40a39e7; los 7 pasos en success). El primer intento quedó en una ruta duplicada y no corrió; se corrigió con `git mv`
+  - [ ] Pendientes menores (el commit 40a39e7 decía hacerlos pero no los incluyó): `default_stages: [pre-commit]` en `.pre-commit-config.yaml`; quitar la línea `Ejecutables.md` del `.gitignore`
   - [ ] H1.7 `mypy` (tipado estático; detecta `warninr` y funciones redefinidas del legado) en pre-commit y CI
   - Carpeta `docs/Ejecutables/` (versionada por decisión del usuario; el `Ejecutables.md` antiguo fue borrado)
 - [ ] H2 — Configuración y Observabilidad
