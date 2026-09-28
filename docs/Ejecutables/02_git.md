@@ -80,6 +80,22 @@ git show --stat HEAD
 ```
 Lista los archivos del último commit, con cuántas líneas cambiaron en cada uno. Sirve para confirmar que el commit contiene lo que dice su mensaje.
 
+## Si la terminal queda en `(END)` o con `:` abajo
+Es el **paginador** (`less`): git muestra la salida larga por páginas. Presiona **`q`** para salir. (`Espacio` baja una página; `/texto` busca.)
+
+## Ver la salida sin paginador (una vez)
+```powershell
+git --no-pager show --stat HEAD
+```
+`--no-pager` va justo después de `git` e imprime todo directo en la terminal.
+
+## Desactivar el paginador para siempre en `show` y `log`
+```powershell
+git config --global pager.show false
+git config --global pager.log false
+```
+`--global` guarda la preferencia para todos tus repositorios.
+
 ## Mover o renombrar un archivo versionado
 ```powershell
 git mv <ruta_actual> <ruta_nueva>

@@ -520,7 +520,7 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` hecho
   - [ ] Congelar el oráculo: un mes de salidas del legado → `tests/fixtures/oracle/`
   - [ ] Registrarse en portal.api.coordinador.cl y suscribirse a "Consulta de Datos" (SIP, Planificación) → `user_key` propia en `.env`
   - [ ] Pedir a la mesa de ayuda del CEN acceso por API a las descargas de Plabacom (`/bff/api/presigned-urls`) o una alternativa oficial
-- [~] **H1 — Proyecto Reproducible**
+- [x] **H1 — Proyecto Reproducible** (cerrado 2026-09-28; CI ✅ en 3c0d0b3 con ruff + mypy strict + pytest; mini-quiz aprobado: 2 correctas + 3 parciales. **Reforzar:** el concepto de CI (el usuario no lo tenía claro aunque lo configuró) y derivar los casos de test desde la regla escrita)
   - [x] H1.1 Instalar `uv` + `uv init --package` → `pyproject.toml`, `src/`, `.python-version`
   - [x] H1.2 Estructura de paquetes `src/ppa_pipeline/{extract,bronze,silver,quality,load,domain}`
   - [x] H1.3 `ruff` (lint + format) configurado en `pyproject.toml` (pendiente menor: reemplazar los comentarios TODO de I/B/PD)
@@ -528,10 +528,13 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` hecho
   - Extras hechos: `.gitattributes` (LF), `known-first-party = ["ppa_pipeline"]` en isort
   - [x] H1.5 `pre-commit` (commit b276aa3). Pendiente menor: agregar `default_stages: [pre-commit]` para que los hooks no corran también en commit-msg
   - [x] H1.6 Repositorio **público** en GitHub: https://github.com/kashibeokok-art/ppa-pipeline. CI ✅ (run 36370506292, commit 40a39e7; los 7 pasos en success). El primer intento quedó en una ruta duplicada y no corrió; se corrigió con `git mv`
-  - [ ] Pendientes menores (los commits 40a39e7 y 9963bb4 dicen hacerlos, pero ninguno los incluyó; probablemente el archivo no se guardó en VS Code): `default_stages: [pre-commit]` en `.pre-commit-config.yaml`; quitar la línea `Ejecutables.md` del `.gitignore`
-  - [x] H1.7 `mypy` en modo `strict` sobre `src` y `tests`, como hook **local** de pre-commit (`uv run mypy`, no mirrors-mypy, porque el entorno aislado no ve las dependencias del proyecto) + paso en el CI. Tests anotados por el usuario (commit 33660cd, **pendiente de push** y de confirmar ✅ en el CI). Mejora opcional: `bloque_esperado: Bloque` en lugar de `str`
+  - [x] Pendientes menores resueltos en 3c0d0b3: `default_stages: [pre-commit]` y `.gitignore` limpio
+  - [x] H1.7 `mypy` en modo `strict` sobre `src` y `tests`, como hook **local** de pre-commit (`uv run mypy`, no mirrors-mypy, porque el entorno aislado no ve las dependencias del proyecto) + paso en el CI ✅. Tests anotados con `bloque_esperado: Bloque`. Incidencias resueltas: `uv not found` (VS Code con PATH viejo → reiniciar) y `Bloque.A` (Literal ≠ Enum)
   - Carpeta `docs/Ejecutables/` (versionada por decisión del usuario; el `Ejecutables.md` antiguo fue borrado)
-- [ ] H2 — Configuración y Observabilidad
+- [~] **H2 — Configuración y Observabilidad**
+  - [x] H2.1 (cerrado 2026-09-28; **código final escrito por Claude a pedido del usuario**, sin commit todavía; 18 tests ✅, mypy ✅, ruff ✅; se agregó `env_ignore_empty=True` y `[tool.ruff.format] exclude=["*.md"]`, porque ruff formateaba los bloques de los .md y rompía el CI). **El usuario pidió explicación y práctica:** lección 06 + carpeta `practica/` (5 ejercicios + SOLUCIONES.md, verificados 23/23 con las soluciones; el CI no los corre porque `testpaths = ["tests"]`). **Próxima sesión:** revisar los ejercicios del usuario ANTES de H2.2. Detalle original: `config.py`: clase `Settings(BaseSettings)` con `env_prefix="PPA_"`, `.env`, atributos `data_dir: Path`, `log_level: NivelLog`, `cen_api_key: SecretStr | None`; `.env.example`; `tests/test_config.py` con una fixture autouse (`monkeypatch.chdir(tmp_path)` + `delenv`). Esqueleto verificado en el scratchpad: mypy strict ✅, pytest 5/5 ✅, ruff ✅. ⚠️ NO usar `Settings(_env_file=None)`: mypy strict lo rechaza (call-arg). Primera clase del usuario → explicar POO desde cero (lección 05)
+  - [ ] H2.2 Logging estructurado con `run_id`
+  - [ ] H2.3 CLI `typer` + códigos de salida
 - [ ] H3 — Ingesta Automatizada → Bronze
 - [ ] H4 — Silver: Retiros Conformados
 - [ ] H5 — Silver: CMg, Inyecciones y Valorización

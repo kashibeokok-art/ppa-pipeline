@@ -20,6 +20,12 @@ uv run ruff format --check .        # solo revisa, no cambia nada
 uv run ruff format --check --diff . # muestra qué cambiaría
 ```
 
+## Revisar y corregir solo la carpeta de práctica
+```powershell
+uv run ruff check practica --fix
+uv run ruff format practica
+```
+
 ## Experimento: estadísticas sobre el legado
 ```powershell
 uv run ruff check OLD/ --select F --statistics
@@ -41,6 +47,9 @@ select = [
     "UP",       # pyupgrade: moderniza la sintaxis a la versión de Python
     "PD",       # pandas-vet: patrones de pandas propensos a errores
 ]
+
+[tool.ruff.format]
+exclude = ["*.md"]   # no reformatear los bloques de código de la documentación
 
 [tool.ruff.lint.isort]
 known-first-party = ["ppa_pipeline"]   # tu paquete va en su propio bloque de imports

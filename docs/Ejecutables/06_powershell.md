@@ -34,6 +34,23 @@ $env:Path -split ';'
 ```
 `$env:Path` es la variable de entorno PATH del terminal actual. `-split ';'` la separa en líneas para leerla mejor.
 
+## Copiar un archivo
+```powershell
+Copy-Item .env.example .env
+```
+Crea `.env` a partir de la plantilla `.env.example`.
+
+## Definir una variable de entorno solo en esta terminal
+```powershell
+$env:PPA_LOG_LEVEL = "DEBUG"
+```
+Existe hasta que cierres la terminal. Sirve para probar la configuración sin editar `.env`.
+
+## Borrar una variable de entorno de esta terminal
+```powershell
+Remove-Item Env:PPA_LOG_LEVEL
+```
+
 ## Borrar una carpeta con su contenido
 ```powershell
 Remove-Item -Recurse -Force <carpeta>

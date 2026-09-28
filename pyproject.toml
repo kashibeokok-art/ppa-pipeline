@@ -7,7 +7,9 @@ authors = [
     { name = "kashibeokok-art", email = "kashibeokok@gmail.com" }
 ]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "pydantic-settings>=2.15.0",
+]
 
 [project.scripts]
 ppa-pipeline = "ppa_pipeline:main"
@@ -37,6 +39,9 @@ select = [
     "UP",       # modernizar sintaxis a la versión de Python
     "PD",       # TODO: esta es específica para ingeniería de datos, ¿de qué librería?
 ]
+[tool.ruff.format]
+exclude = ["*.md"]   # no reformatear los bloques de código de la documentación (comentarios alineados a propósito)
+
 [tool.ruff.lint.isort]
 known-first-party = ["ppa_pipeline"]
 

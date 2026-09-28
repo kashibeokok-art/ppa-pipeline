@@ -170,8 +170,63 @@ Un proyecto de datos profesional **no empieza escribiendo código**. Empieza ent
 - **Lección real:** sobre el legado, mypy por defecto **no detectó** `logging.warninr`, porque se salta las funciones sin anotaciones (**tipado gradual**). Con `--check-untyped-defs` lo encontró en **dos** lugares (líneas 1601 y 2034). La función `subir_barras_a_sql` duplicada **no la detectó ninguna herramienta**, así que la revisión humana sigue siendo necesaria.
 - 🧠 **Conceptos:** *Static Typing*, *Gradual Typing*, `Any`, `strict`, `None` como valor, hook local vs. entorno aislado. Lección: [04_mypy_tipado_estatico.md](aprendizaje/04_mypy_tipado_estatico.md).
 
+- **Incidencias reales resueltas:**
+  - `Executable 'uv' not found` en el hook: VS Code se había abierto antes de instalar uv y tenía una copia vieja del PATH (**herencia de variables de entorno**). Se resolvió reiniciando VS Code.
+  - `Bloque.A`: `Bloque` es un `Literal` (un **tipo**), no un `Enum`. Los datos van como `"A"` y la anotación como `Bloque`. mypy lo atrapó antes de que rompiera el CI.
+  - `(END)` en la terminal: es el **paginador** de git (`less`); se sale con `q`.
+- **Resultado:** CI ✅ con `uv sync --locked` → ruff → mypy → pytest.
+
+### ✅ H1 cerrado (2026-09-28)
+El proyecto se reconstruye desde cero en cualquier máquina (`uv sync --locked`) y cada cambio pasa por dos capas de control: **pre-commit** en tu PC (segundos) y **CI** en GitHub (minutos).
+
+### Mini-quiz H1: respuestas modelo (resultado: 2 correctas + 3 parciales, aprobado)
+
+1. **`pyproject.toml` vs. `uv.lock` vs. `.venv/`:** `pyproject.toml` declara qué se necesita y en qué **rango** de versiones. `uv.lock` fija la versión **exacta** de todo, incluidas las dependencias indirectas. `.venv/` no va a git porque es pesado y, sobre todo, **depende del sistema operativo**. Regla: se versiona **la receta**, no el resultado.
+2. **¿Por qué separar `domain/`?** Las reglas de negocio son funciones puras: se **testean sin nada externo** (pandas, archivos, SQL), se reutilizan y sobreviven a los cambios de tecnología.
+3. **Test incorrecto en verde:** es peligroso porque **certifica el error**. Se evita derivando los casos de la **regla escrita** (RN-01 en `requerimientos.md`), citando la regla en el docstring (trazabilidad) y con revisión de alguien del negocio.
+4. **mypy y `warninr`:** por defecto mypy **se salta las funciones sin anotaciones** (tipado gradual), y el legado no tenía ninguna. En el proyecto se usa `strict = true`, que **obliga** a anotar todas las funciones, así que no queda código sin revisar.
+5. **pre-commit vs. CI:**
+
+| | pre-commit | CI |
+|---|---|---|
+| Dónde | Tu PC | Computadora nueva de GitHub (Linux) |
+| Cuándo | Cada `git commit` | Cada `git push` |
+| Qué | Formato, lint, mypy, secretos, archivos grandes, mensaje | Todo lo anterior + **pytest**, desde un entorno limpio |
+| Tiempo | Segundos | 1–2 minutos |
+
+   `pytest` va en el CI porque pre-commit debe ser instantáneo. Con cientos de tests, un commit lento hace que la gente se salte los controles.
+
+**A reforzar:** tests derivados de la regla escrita (H4) y qué es el CI (vuelve en H3 y H9).
+
+**Pregunta de verificación: `pip install` sin `uv add`, ¿dónde falla?** No falla en tu PC ni en pre-commit (la librería está en tu `.venv`). **Falla en el CI**, que parte de una máquina vacía e instala solo lo que dice `uv.lock` → `ModuleNotFoundError`. Es el síntoma clásico de *"en mi máquina funciona"*. Regla: agregar librerías siempre con `uv add`.
+
+---
+
+## H2: Configuración y Observabilidad (en curso)
+
+### Paso 16: Configuración fuera del código y primera clase (H2.1) ✅
+- **Qué:** `config.py` con una clase `Settings` (pydantic-settings) que lee variables `PPA_*` del entorno y de `.env`, valida tipos y guarda la clave de la API como `SecretStr`.
+- **Por qué:** **Twelve-Factor, factor III**: la configuración cambia entre entornos y no debe estar en el código. En el legado, rutas y contraseña estaban escritas en el código.
+- **POO:** primera **clase**. Clase = molde, instancia = objeto concreto, atributo = dato, **herencia** = `Settings` reutiliza todo lo de `BaseSettings`.
+- **Lección real (verificada antes de entregarla):** `Settings(_env_file=None)` funcionaba en pytest pero fallaba en `mypy --strict`. Se usa `monkeypatch.chdir(tmp_path)` para aislar los tests.
+- **Error real del usuario:** el atributo `secret_key: SecretStr` (sin valor por defecto) produjo `Field required`, y `PPA_CEN_API_KEY` en `.env` produjo `Extra inputs are not permitted`. Causa común: el **nombre del atributo decide qué variable se lee** (`PPA_` + nombre), y sin `= valor` el campo es **obligatorio**. Se corrigió con `cen_api_key: SecretStr | None = None`. Ahí se vio el *fail fast* en acción.
+- **Errores reales en los tests:** (1) `DID NOT RAISE`: se probaba el rechazo con valores **válidos**. (2) El valor por defecto esperado no coincidía con `config.py` (misma lección que `23→C`). (3) mypy rechazó `Settings(log_level=str)`; se prueba por la entrada real, `monkeypatch.setenv`. (4) El test estaba en `tests/domain/`; los tests reflejan la estructura de `src/`.
+- 🧠 **Conceptos:** Twelve-Factor, variables de entorno, clase/instancia/atributo/herencia, `SecretStr`, fixture, *test isolation*, dependencia del pipeline vs. de desarrollo. Lección: [05_primera_clase_configuracion.md](aprendizaje/05_primera_clase_configuracion.md).
+
+- **Cierre:** a pedido del usuario, Claude dejó `config.py` y `test_config.py` en su versión final:
+  - `env_ignore_empty=True`, para que un valor vacío cuente como "no configurado";
+  - 8 tests de configuración;
+  - `.env.example` documentado.
+  - Total del proyecto: **18 tests en verde**, mypy y ruff limpios.
+- **Ajuste técnico:** `ruff format` reformateaba los bloques de código de los `.md`, lo que habría roto el CI. Se excluyeron con `[tool.ruff.format] exclude = ["*.md"]`.
+- **Refuerzo:** el usuario todavía no domina cómo se construye una clase ni cómo se escribe un test. Se agregaron:
+  - la lección [06](aprendizaje/06_como_se_construyo_config_y_tests.md): `config.py` construido en 7 pasos incrementales, la receta de 4 preguntas para escribir un test y los 6 patrones de test;
+  - la carpeta [`practica/`](../practica/README.md) con **5 ejercicios** (función → guarda → Literal → **clase propia** → fixtures) y `SOLUCIONES.md`, verificados: con las soluciones, 23/23 en verde.
+
 ### Próximas tareas
-- **Cierre de H1:** mini-quiz.
+- **Antes de H2.2:** hacer los ejercicios de `practica/` (al menos el 01, el 02 y el 04).
+- **H2.2:** logging estructurado con `run_id`.
+- **H2.3:** CLI con `typer` y códigos de salida.
 - **H2:** configuración (`.env`, `pydantic-settings`, primera **clase**) y observabilidad (logging con `run_id`).
 
 ---

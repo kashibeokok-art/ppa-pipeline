@@ -13,6 +13,7 @@ Todos se ejecutan en **PowerShell**, desde la **raíz del proyecto** (donde est�
 | [06_powershell.md](06_powershell.md) | PowerShell | Atajos del sistema (crear carpetas, etc.) |
 | [07_ci_github_actions.md](07_ci_github_actions.md) | GitHub Actions | Integración continua: lint + tests en cada push |
 | [08_mypy.md](08_mypy.md) | mypy | Verificación de tipos (tipado estático) |
+| [09_vscode.md](09_vscode.md) | VS Code | Extensiones, temas, configuración y vista previa de Markdown |
 
 ## Rutina diaria (el orden típico)
 

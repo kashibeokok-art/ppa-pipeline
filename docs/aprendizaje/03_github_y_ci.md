@@ -135,6 +135,20 @@ git mv .github/workflows/.github/workflows/ci.yml .github/workflows/ci.yml
 
 ---
 
+## 5.1 "En mi máquina funciona" (*works on my machine*)
+
+**Pregunta:** si instalas una librería con `pip install` (sin `uv add`) y tu código la usa, ¿dónde falla?
+
+| Dónde | ¿Falla? | Por qué |
+|---|---|---|
+| Tu PC | ❌ No | La librería está en tu `.venv`; tu código la encuentra |
+| pre-commit | ❌ No | Corre en tu PC, con el mismo `.venv` |
+| **CI** | ✅ **Sí** | La computadora de GitHub es nueva y vacía; instala **solo** lo que dice `uv.lock`. Resultado: `ModuleNotFoundError` |
+
+🧠 Tu PC tiene cosas instaladas que el proyecto **no declara**. El CI lo detecta porque no tiene nada de tu PC, solo la receta. **Regla:** las librerías se agregan siempre con `uv add` (que actualiza `pyproject.toml` y `uv.lock`), nunca con `pip install` suelto.
+
+---
+
 ## 6. Comandos de esta lección
 
 ```powershell
