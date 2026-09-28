@@ -1,0 +1,20 @@
+
+
+# Credenciales y configuracion local
+.env
+credenciales.py
+
+# Datos
+Archivos/
+OLD/
+*.parquet
+*.csv
+*.xlsx
+*.mdb
+*.zip
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/

@@ -1,0 +1,17 @@
+[project]
+name = "ppa-pipeline"
+version = "0.1.0"
+description = "Actualización Código de GM, nuevas practicas de Ingeniero de Datos"
+readme = "README.md"
+authors = [
+    { name = "kashibeokok-art", email = "kashibeokok@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = []
+
+[project.scripts]
+ppa-pipeline = "ppa_pipeline:main"
+
+[build-system]
+requires = ["uv_build>=0.12.19,<0.13.0"]
+build-backend = "uv_build"
