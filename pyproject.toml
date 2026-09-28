@@ -18,6 +18,7 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "pytest>=9.1.1",
     "ruff>=0.16.9",
 ]
 
@@ -34,3 +35,6 @@ select = [
     "UP",       # modernizar sintaxis a la versión de Python
     "PD",       # TODO: esta es específica para ingeniería de datos, ¿de qué librería?
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
