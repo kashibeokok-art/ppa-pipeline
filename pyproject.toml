@@ -1,7 +1,7 @@
 [project]
 name = "ppa-pipeline"
 version = "0.1.0"
-description = "Actualización Código de GM, nuevas practicas de Ingeniero de Datos"
+description = "Actualización Código de ETL Comercial CEN, nuevas practicas de Ingeniero de Datos"
 readme = "README.md"
 authors = [
     { name = "kashibeokok-art", email = "kashibeokok@gmail.com" }
