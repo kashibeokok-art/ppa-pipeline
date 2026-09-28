@@ -529,7 +529,7 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` hecho
   - [x] H1.5 `pre-commit` (commit b276aa3). Pendiente menor: agregar `default_stages: [pre-commit]` para que los hooks no corran también en commit-msg
   - [x] H1.6 Repositorio **público** en GitHub: https://github.com/kashibeokok-art/ppa-pipeline. CI ✅ (run 36370506292, commit 40a39e7; los 7 pasos en success). El primer intento quedó en una ruta duplicada y no corrió; se corrigió con `git mv`
   - [ ] Pendientes menores (los commits 40a39e7 y 9963bb4 dicen hacerlos, pero ninguno los incluyó; probablemente el archivo no se guardó en VS Code): `default_stages: [pre-commit]` en `.pre-commit-config.yaml`; quitar la línea `Ejecutables.md` del `.gitignore`
-  - [~] H1.7 `mypy` en modo `strict` sobre `src` y `tests`, como hook **local** de pre-commit (`uv run mypy`, no mirrors-mypy, porque el entorno aislado no ve las dependencias del proyecto) + paso en el CI. Estado inicial: `src` sin errores; `tests` con 2 errores `no-untyped-def` (faltan anotaciones en las funciones de test)
+  - [x] H1.7 `mypy` en modo `strict` sobre `src` y `tests`, como hook **local** de pre-commit (`uv run mypy`, no mirrors-mypy, porque el entorno aislado no ve las dependencias del proyecto) + paso en el CI. Tests anotados por el usuario (commit 33660cd, **pendiente de push** y de confirmar ✅ en el CI). Mejora opcional: `bloque_esperado: Bloque` en lugar de `str`
   - Carpeta `docs/Ejecutables/` (versionada por decisión del usuario; el `Ejecutables.md` antiguo fue borrado)
 - [ ] H2 — Configuración y Observabilidad
 - [ ] H3 — Ingesta Automatizada → Bronze

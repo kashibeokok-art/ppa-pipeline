@@ -1,6 +1,6 @@
 import pytest
 
-from ppa_pipeline.domain.bloques import asignar_bloque
+from ppa_pipeline.domain.bloques import Bloque, asignar_bloque
 
 
 @pytest.mark.parametrize(
@@ -15,7 +15,7 @@ from ppa_pipeline.domain.bloques import asignar_bloque
         (23, "A"),
     ],
 )
-def test_asignar_bloque(hora: int, bloque_esperado: str) -> None:
+def test_asignar_bloque(hora: int, bloque_esperado: Bloque) -> None:
     """RN-01: cada hora del día pertenece a un bloque horario de licitación publica."""
     assert asignar_bloque(hora) == bloque_esperado
 

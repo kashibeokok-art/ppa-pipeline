@@ -1,6 +1,7 @@
 # Controles automáticos que corren en cada `git commit`.
 # Instalar: uv run pre-commit install
 default_install_hook_types: [pre-commit, commit-msg]
+default_stages: [pre-commit]
 
 repos:
   # 1. Higiene general de archivos

@@ -120,7 +120,7 @@ Un proyecto de datos profesional **no empieza escribiendo código**. Empieza ent
 
 ---
 
-## H1: Proyecto Reproducible (H1.1–H1.6 ✅; falta H1.7 mypy)
+## H1: Proyecto Reproducible (H1.1–H1.7 ✅)
 
 ### Paso 9: Gestor de proyecto y dependencias (H1.1) ✅
 - **Qué:** `uv init --package`, que generó `pyproject.toml`, `uv.lock`, `.python-version` y la estructura `src/ppa_pipeline/`.
@@ -164,8 +164,14 @@ Un proyecto de datos profesional **no empieza escribiendo código**. Empieza ent
 - **Lección real:** el workflow quedó en una ruta duplicada y GitHub lo **ignoró sin dar error** (0 ejecuciones). **Verificar el resultado, no la acción.**
 - 🧠 **Conceptos:** repositorio remoto, CI, *workflow*, *runner*, `--locked`, fallo silencioso, *Pre-publication Review*. Lección: [03_github_y_ci.md](aprendizaje/03_github_y_ci.md).
 
+### Paso 15: Verificación de tipos con mypy (H1.7) ✅
+- **Qué:** mypy en modo `strict` sobre `src` y `tests`, como hook **local** de pre-commit y como paso del CI. Se anotaron los tipos de las funciones de test.
+- **Por qué:** Python solo revisa los tipos al ejecutar. mypy los revisa **antes**.
+- **Lección real:** sobre el legado, mypy por defecto **no detectó** `logging.warninr`, porque se salta las funciones sin anotaciones (**tipado gradual**). Con `--check-untyped-defs` lo encontró en **dos** lugares (líneas 1601 y 2034). La función `subir_barras_a_sql` duplicada **no la detectó ninguna herramienta**, así que la revisión humana sigue siendo necesaria.
+- 🧠 **Conceptos:** *Static Typing*, *Gradual Typing*, `Any`, `strict`, `None` como valor, hook local vs. entorno aislado. Lección: [04_mypy_tipado_estatico.md](aprendizaje/04_mypy_tipado_estatico.md).
+
 ### Próximas tareas
-- **H1.7:** `mypy` (tipado estático), en pre-commit y CI.
+- **Cierre de H1:** mini-quiz.
 - **H2:** configuración (`.env`, `pydantic-settings`, primera **clase**) y observabilidad (logging con `run_id`).
 
 ---

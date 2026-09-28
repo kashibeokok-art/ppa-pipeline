@@ -61,6 +61,13 @@ git commit -m "..."       # repite el commit
 
 > ⛔ Evita `git commit --no-verify`: salta todos los controles.
 
+## Si un hook dice `Executable 'uv' not found`
+El programa (VS Code) se abrió antes de instalar uv y tiene un PATH viejo. Cierra **todas** las ventanas de VS Code, vuelve a abrirlo y verifica:
+```powershell
+where.exe uv
+```
+Debe mostrar `C:\Users\Claud\.local\bin\uv.exe`. Si no muestra nada, el terminal no ve uv.
+
 ## Si los hooks aparecen repetidos al hacer commit
 Algunos hooks no declaran su etapa y corren en `pre-commit` **y** en `commit-msg`. Se corrige con esta línea en el YAML:
 ```yaml

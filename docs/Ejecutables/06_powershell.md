@@ -22,6 +22,18 @@ Get-ChildItem -Recurse .github
 ```
 `-Recurse` entra en todas las subcarpetas. Sirve para confirmar que un archivo quedó donde debe.
 
+## Saber dónde está un ejecutable (y si el terminal lo ve)
+```powershell
+where.exe uv
+```
+Muestra la ruta del programa. Si no muestra nada, ese programa no está en el PATH de este terminal.
+
+## Ver las carpetas del PATH, una por línea
+```powershell
+$env:Path -split ';'
+```
+`$env:Path` es la variable de entorno PATH del terminal actual. `-split ';'` la separa en líneas para leerla mejor.
+
 ## Borrar una carpeta con su contenido
 ```powershell
 Remove-Item -Recurse -Force <carpeta>
