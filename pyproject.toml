@@ -35,6 +35,8 @@ select = [
     "UP",       # modernizar sintaxis a la versión de Python
     "PD",       # TODO: esta es específica para ingeniería de datos, ¿de qué librería?
 ]
+[tool.ruff.lint.isort]
+known-first-party = ["ppa_pipeline"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

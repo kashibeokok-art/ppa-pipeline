@@ -446,6 +446,11 @@ Las fases H0–H2 son prerequisito. Luego se recomienda avanzar **por dominio de
 | Static Analysis / Linting | Revisar el código sin ejecutarlo (ruff: F = errores lógicos, E = estilo PEP 8, I = imports, B = bugs sutiles, UP = sintaxis moderna, PD = pandas) | H1 | ✅ |
 | Defense in Depth | Varias herramientas complementarias: ruff (sintaxis/patrones), mypy (tipos/atributos), pytest (lógica) | H1 | |
 | Mutable Default Argument | Un `[]`/`{}` por defecto se comparte entre llamadas (B006) | H1 | ✅ |
+| TDD (Red → Green → Refactor) | Escribir el test antes que el código; el test es especificación ejecutable | H1 | ✅ |
+| Boundary Value Testing | Probar los bordes (7|8, 17|18, 22|23), donde nacen los bugs | H1 | ✅ |
+| Guard Clause | Validar la entrada al inicio de la función y fallar con un mensaje claro | H1 | ✅ |
+| Line Ending Normalization | `.gitattributes` con `eol=lf` para repos multiplataforma | H1 | ✅ |
+| Vectorization | Operar sobre columnas completas (`.map` con lookup) en vez de fila por fila (`.apply`) | H4 | |
 | Conformed Dimension | Dimensión compartida (empresa, fecha, bloque) que permite cruzar dominios | H0, H8 | ✅ (diseño) |
 | Silent Nulls | Un cruce que falla sin error y deja valores nulos (ej. retiro sin CMg) | H6 | |
 | Documented Assumption | Supuesto explícito y vigente hasta que alguien lo corrija | H0 | ✅ |
@@ -515,7 +520,8 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` hecho
   - [x] H1.1 Instalar `uv` + `uv init --package` → `pyproject.toml`, `src/`, `.python-version`
   - [x] H1.2 Estructura de paquetes `src/ppa_pipeline/{extract,bronze,silver,quality,load,domain}`
   - [x] H1.3 `ruff` (lint + format) configurado en `pyproject.toml` (pendiente menor: reemplazar los comentarios TODO de I/B/PD)
-  - [~] H1.4 `pytest` + primer test: RN-01 `domain/bloques.py` con TDD (entrada = hora de inicio 0–23)
+  - [x] H1.4 `pytest` + primer test: RN-01 `domain/bloques.py` con TDD (entrada = hora de inicio 0–23). 9 tests en verde. El usuario detectó y corrigió un caso de negocio mal escrito en el test (23→A). Nota H4: vectorizar con un dict de 24 horas + `.map()`, no `.apply()`
+  - Extras hechos: `.gitattributes` (LF), `known-first-party = ["ppa_pipeline"]` en isort
   - [ ] H1.5 `pre-commit`
   - [ ] H1.6 Repositorio en GitHub + CI (GitHub Actions: lint + tests)
 - [ ] H2 — Configuración y Observabilidad
