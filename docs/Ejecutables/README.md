@@ -12,6 +12,7 @@ Todos se ejecutan en **PowerShell**, desde la **raíz del proyecto** (donde est�
 | [05_pre-commit.md](05_pre-commit.md) | pre-commit | Controles automáticos antes de cada commit |
 | [06_powershell.md](06_powershell.md) | PowerShell | Atajos del sistema (crear carpetas, etc.) |
 | [07_ci_github_actions.md](07_ci_github_actions.md) | GitHub Actions | Integración continua: lint + tests en cada push |
+| [08_mypy.md](08_mypy.md) | mypy | Verificación de tipos (tipado estático) |
 
 ## Rutina diaria (el orden típico)
 
@@ -20,6 +21,7 @@ uv sync                              # 1. entorno al día
 # ... programar ...
 uv run ruff check . --fix            # 2. lint (corrige lo que puede)
 uv run ruff format .                 # 3. formato
+uv run mypy                          #    tipos
 uv run pytest -v                     # 4. tests
 git add .                            # 5. preparar
 git status                           #    revisar ANTES de commitear

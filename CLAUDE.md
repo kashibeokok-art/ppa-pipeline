@@ -194,8 +194,8 @@ Severidad: 🔴 crítico · 🟠 alto · 🟡 medio · 🔵 estilo/mantenibilida
 ### 5.2 Bugs confirmados o probables
 - 🔴 **Reintentos sin `break`** (`main_mensual.py:249-288`): cada paso exitoso se ejecuta 3 veces. Si falla, el error se registra y el pipeline **sigue** con datos incompletos. [H3, H9]
 - 🔴 **Carga no atómica** (`funciones.subir_carpeta_a_sql`): `to_sql(append)` archivo por archivo, sin transacción. Si falla a la mitad, el mes queda cargado a medias y la verificación "¿existe (Anio, Mes)?" lo **salta para siempre**. [H8]
-- 🟠 `logging.warninr` (`funciones.py:1601`): el error de tipeo lanza `AttributeError` cuando un archivo no trae fecha. [H1: lo detecta **mypy**, no ruff; verificado 2026-09-27]
-- 🟠 `subir_barras_a_sql` está **definida dos veces** en `funciones.py` (líneas 2081 y 2321). La segunda pisa a la primera. [H1: lo detecta **mypy** (`no-redef`); ruff F811 no lo marcó]
+- 🟠 `logging.warninr` en **dos lugares** (`funciones.py:1601` y `:2034`): el error de tipeo lanza `AttributeError`. [H1.7: lo detecta **mypy solo con `--check-untyped-defs` o `strict`**. Por defecto mypy **no revisa funciones sin anotaciones** y no lo ve. ruff tampoco. Verificado 2026-09-27]
+- 🟠 `subir_barras_a_sql` está **definida dos veces** en `funciones.py` (líneas 2081 y 2321). La segunda pisa a la primera. [Verificado 2026-09-27: **ni ruff F811 ni mypy (`--check-untyped-defs`) lo marcaron**. Lección: ninguna herramienta atrapa todo; la revisión de código humana sigue siendo necesaria]
 - 🔴 `Homologar_Retiro.py` llama 42 veces a `safe_prent`, que no existe (F821): el script se cae con `NameError`. Detectado por ruff (2026-09-27).
 - Ruff sobre `OLD/` (2026-09-27): 64 errores `F` (45 F821, 15 F401, 3 F841, 1 F811) y 246 de `E/B/UP/PD/I` (183 E501, 14 I001, 11 B007, 9 PD015, 8 B905, 3 PD002, 1 B006, 2 B008…).
 - 🟠 En `main_mensual_iny.py:195` el `try` está a nivel de módulo, fuera del `if __name__`, y `subir_iny_a_sql` corre aunque el procesamiento haya fallado. [H9]
@@ -528,8 +528,8 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` hecho
   - Extras hechos: `.gitattributes` (LF), `known-first-party = ["ppa_pipeline"]` en isort
   - [x] H1.5 `pre-commit` (commit b276aa3). Pendiente menor: agregar `default_stages: [pre-commit]` para que los hooks no corran también en commit-msg
   - [x] H1.6 Repositorio **público** en GitHub: https://github.com/kashibeokok-art/ppa-pipeline. CI ✅ (run 36370506292, commit 40a39e7; los 7 pasos en success). El primer intento quedó en una ruta duplicada y no corrió; se corrigió con `git mv`
-  - [ ] Pendientes menores (el commit 40a39e7 decía hacerlos pero no los incluyó): `default_stages: [pre-commit]` en `.pre-commit-config.yaml`; quitar la línea `Ejecutables.md` del `.gitignore`
-  - [ ] H1.7 `mypy` (tipado estático; detecta `warninr` y funciones redefinidas del legado) en pre-commit y CI
+  - [ ] Pendientes menores (los commits 40a39e7 y 9963bb4 dicen hacerlos, pero ninguno los incluyó; probablemente el archivo no se guardó en VS Code): `default_stages: [pre-commit]` en `.pre-commit-config.yaml`; quitar la línea `Ejecutables.md` del `.gitignore`
+  - [~] H1.7 `mypy` en modo `strict` sobre `src` y `tests`, como hook **local** de pre-commit (`uv run mypy`, no mirrors-mypy, porque el entorno aislado no ve las dependencias del proyecto) + paso en el CI. Estado inicial: `src` sin errores; `tests` con 2 errores `no-untyped-def` (faltan anotaciones en las funciones de test)
   - Carpeta `docs/Ejecutables/` (versionada por decisión del usuario; el `Ejecutables.md` antiguo fue borrado)
 - [ ] H2 — Configuración y Observabilidad
 - [ ] H3 — Ingesta Automatizada → Bronze

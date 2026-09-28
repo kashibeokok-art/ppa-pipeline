@@ -29,3 +29,13 @@ repos:
     hooks:
       - id: conventional-pre-commit
         stages: [commit-msg]
+
+  # 4. mypy: tipos (hook local: usa el entorno del proyecto)
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: uv run mypy
+        language: system
+        types: [python]
+        pass_filenames: false
