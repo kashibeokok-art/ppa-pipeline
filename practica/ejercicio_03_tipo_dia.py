@@ -24,4 +24,9 @@ TipoDia = Literal["HABIL", "NO_HABIL"]
 
 def tipo_dia(dia_semana: int) -> TipoDia:
     """Clasifica el día de la semana (0=lunes ... 6=domingo) como hábil o no hábil."""
-    raise NotImplementedError("TODO: implementa la clasificación")
+    if dia_semana < 0 or dia_semana > 6:
+        raise ValueError(f"Día de la semana fuera de rango (0-6): {dia_semana}")
+    elif dia_semana <= 4:
+        return "HABIL"
+    else:
+        return "NO_HABIL"

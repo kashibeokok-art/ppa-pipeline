@@ -16,4 +16,6 @@ Pistas:
 
 def validar_mes(mes: int) -> int:
     """Devuelve el mes si está entre 1 y 12; si no, lanza ValueError."""
-    raise NotImplementedError("TODO: implementa la validación")
+    if not (1 <= mes <= 12):
+        raise ValueError(f"Mes fuera de rango: {mes}")
+    return mes

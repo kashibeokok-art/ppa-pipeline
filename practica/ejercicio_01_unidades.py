@@ -18,4 +18,4 @@ Pistas:
 
 def kwh_a_mwh(kwh: float) -> float:
     """Convierte kWh a MWh en valor absoluto (RN-10)."""
-    raise NotImplementedError("TODO: implementa la conversión")
+    return abs(kwh) / 1000

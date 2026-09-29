@@ -35,6 +35,13 @@ El CI no ejecuta esta carpeta (solo `tests/`), así que los ejercicios sin termi
 | `ModuleNotFoundError` / `ImportError` | El archivo que importas no existe o el nombre está mal escrito |
 | `fixture '<nombre>' not found` | Pediste un parámetro que pytest no conoce como fixture |
 | `NotImplementedError` | La función todavía no está escrita (normal al empezar un ejercicio: fase roja de TDD) |
+| `collected N items` con un N menor al esperado | Algún test **no se está ejecutando**: revisa que empiece con `test_` y que la fixture tenga `@pytest.fixture` |
+
+## Ver qué tests encuentra pytest, sin ejecutarlos
+```powershell
+uv run pytest practica/test_ejercicio_05_archivos.py --collect-only -q
+```
+Lista los tests que pytest reconoce. Si falta uno, pytest no lo ve.
 
 ## Convenciones para que pytest encuentre los tests
 - Van en la carpeta `tests/`.

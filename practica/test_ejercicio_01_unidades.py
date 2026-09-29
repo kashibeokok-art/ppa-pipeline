@@ -16,11 +16,20 @@ def test_mil_kwh_son_un_mwh() -> None:
 
 def test_decimales_con_approx() -> None:
     """Con decimales se usa pytest.approx, porque los float tienen pequeños errores de redondeo."""
-    assert kwh_a_mwh(1234.5) == pytest.approx(1.2345)
+    energia = 1234.5
+    resultado = kwh_a_mwh(energia)
+    assert resultado == pytest.approx(1.2345)
 
 
-# TODO 1: escribe test_negativo_se_convierte_en_valor_absoluto
-#   kwh_a_mwh(-2500) debe ser 2.5  (RN-10)
+def test_negativo_se_convierte_en_valor_absoluto() -> None:
+    """kwh_a_mwh(-2500) debe ser 2.5 (RN-10)."""
+    energia = -2500
+    resultado = kwh_a_mwh(energia)
+    assert resultado == 2.5
 
-# TODO 2: escribe test_cero_es_cero
-#   kwh_a_mwh(0) debe ser 0.0
+
+def test_cero_es_cero() -> None:
+    """kwh_a_mwh(0) debe ser 0.0."""
+    energia = 0
+    resultado = kwh_a_mwh(energia)
+    assert resultado == 0.0

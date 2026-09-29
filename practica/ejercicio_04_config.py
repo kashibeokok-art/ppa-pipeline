@@ -24,5 +24,8 @@ class ConfigPractica(BaseSettings):
 
     model_config = SettingsConfigDict(env_prefix="PRAC_")
 
-    # TODO: agrega aquí los dos atributos de la tabla.
-    pass
+    zona_horaria: str = "America/Santiago"
+    """Zona horaria para la práctica."""
+
+    max_reintentos: int = 3
+    """Número máximo de reintentos permitidos."""

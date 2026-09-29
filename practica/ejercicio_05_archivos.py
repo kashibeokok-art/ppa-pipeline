@@ -25,4 +25,6 @@ from pathlib import Path
 
 def leer_horas(ruta: Path) -> list[int]:
     """Lee un archivo con una hora por línea y devuelve la lista de horas como enteros."""
-    raise NotImplementedError("TODO: implementa la lectura")
+    texto = ruta.read_text(encoding="utf-8")
+    lineas = texto.splitlines()
+    return [int(linea) for linea in lineas if linea.strip()]

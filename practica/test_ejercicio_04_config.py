@@ -29,6 +29,22 @@ def test_lee_variable_de_entorno(monkeypatch: pytest.MonkeyPatch) -> None:
     assert config.max_reintentos == 5  # pydantic lo convirtió a int 5
 
 
+def test_lee_variable_de_entorno_zona(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Patrón 4: entorno. monkeypatch.setenv crea la variable solo durante este test."""
+    monkeypatch.setenv("PRAC_ZONA_HORARIA", "UTC")
+
+    config = ConfigPractica()
+
+    assert config.zona_horaria == "UTC"  # pydantic lo mantiene como str "UTC"
+
+
+def test_reintentos_invalidos_fallan(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Patrón 4: entorno. monkeypatch.setenv crea la variable solo durante este test."""
+    monkeypatch.setenv("PRAC_MAX_REINTENTOS", "tres")
+    with pytest.raises(ValidationError):
+        ConfigPractica()
+
+
 # TODO 1: escribe test_zona_horaria_desde_entorno
 #   Pon PRAC_ZONA_HORARIA="UTC" y verifica que config.zona_horaria == "UTC".
 

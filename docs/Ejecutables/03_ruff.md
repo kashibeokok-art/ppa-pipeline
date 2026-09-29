@@ -20,6 +20,15 @@ uv run ruff format --check .        # solo revisa, no cambia nada
 uv run ruff format --check --diff . # muestra qué cambiaría
 ```
 
+## Qué corrige ruff solo y qué no
+| Error | ¿Lo arregla `ruff format` o `--fix`? |
+|---|---|
+| Espacios, líneas en blanco, comillas, comas finales | ✅ `ruff format` |
+| Imports desordenados (`I001`), imports sin uso (`F401`) | ✅ `ruff check --fix` |
+| **Línea demasiado larga en un texto** (`E501`) | ❌ Hay que acortarla a mano (bloquea el commit) |
+| Nombre inexistente (`F821`) | ❌ Hay que corregir el código |
+| Variable asignada y nunca usada (`F841`) | ❌ Hay que quitar la asignación a mano (ej. `config = X()` dentro de `pytest.raises` → solo `X()`) |
+
 ## Revisar y corregir solo la carpeta de práctica
 ```powershell
 uv run ruff check practica --fix

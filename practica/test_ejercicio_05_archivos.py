@@ -30,6 +30,14 @@ def test_archivo_vacio(tmp_path: Path) -> None:
     assert leer_horas(ruta) == []
 
 
+def test_archivo_con_lineas_vacias(tmp_path: Path) -> Path:
+    """Crea un archivo con líneas vacías y devuelve su ruta."""
+    ruta = tmp_path / "lineas_vacias.txt"
+    ruta.write_text("8\n\n17\n\n", encoding="utf-8")
+
+    assert leer_horas(ruta) == [8, 17]
+
+
 # TODO 1: escribe una fixture llamada archivo_con_lineas_vacias que cree un archivo con
 #   el contenido "8\n\n17\n\n" (con líneas vacías entre medio) y devuelva su ruta.
 

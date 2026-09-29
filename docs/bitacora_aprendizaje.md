@@ -223,6 +223,28 @@ El proyecto se reconstruye desde cero en cualquier máquina (`uv sync --locked`)
   - la lección [06](aprendizaje/06_como_se_construyo_config_y_tests.md): `config.py` construido en 7 pasos incrementales, la receta de 4 preguntas para escribir un test y los 6 patrones de test;
   - la carpeta [`practica/`](../practica/README.md) con **5 ejercicios** (función → guarda → Literal → **clase propia** → fixtures) y `SOLUCIONES.md`, verificados: con las soluciones, 23/23 en verde.
 
+### Práctica: avance
+- ✅ **Ejercicio 01 (kWh→MWh, RN-10):** implementación y 2 tests propios en verde (4/4).
+  - **Lección:** un docstring de test explica **por qué** importa (la regla de negocio), no repite el `assert`.
+  - **Lección:** un buen test **falla cuando rompes la regla que protege**. Se comprueba con el experimento de quitar `abs()`.
+- ✅ **Ejercicio 02 (validar mes):** cláusula de guarda correcta y test de meses inválidos con valores límite (`0`, `13`, `-1`); 6/6.
+  - **Lección:** probar solo los casos válidos deja la guarda **sin protección**: podría borrarse y todo seguiría en verde.
+  - **Lección:** `E501` (línea > 100) **bloquea el commit** y `ruff format` no lo arregla solo. Hay que acortar el texto a mano.
+  - **Lección:** se borran los comentarios `TODO` ya resueltos.
+- ✅ **Ejercicio 03 (tipo de día, RN-16 simple):** guarda + `Literal` + tests; 6/6.
+  - **Logro:** el usuario **eligió solo los valores límite correctos** (4 viernes | 5 sábado).
+  - **Lección:** el mensaje de error debe incluir el valor que falló (`f"...: {dia_semana}"`).
+  - **Lección:** después de la guarda, las condiciones repetidas (`0 <=`) y el `else` tras un `return` son opcionales.
+  - **Pendiente (se repite en los 3 ejercicios):** los docstrings describen el patrón en vez de la regla de negocio, y quedan `TODO` resueltos sin borrar.
+- ✅ **Ejercicio 04 (primera clase propia):** `ConfigPractica` **correcta al primer intento**, con los atributos documentados. **4/4 tests** después de corregir el concepto.
+  - **Lección:** dentro de `pytest.raises`, **no se asigna el resultado** (`config = ...` → F841), porque el objeto nunca se crea. Se llama solo `ConfigPractica()`.
+- 🔄 **Ejercicio 05 (archivos + fixture propia):** `leer_horas` correcta, con comprensión de lista y `encoding="utf-8"`; nombres corregidos (`lines` → `lineas`).
+  - **Error:** se escribió una función que mezclaba fixture y test (sin `@pytest.fixture`, sin `return`, con `assert`, y sin el prefijo `test_`). pytest la **ignoró en silencio**: `collected 2 items`, todo en verde, pero sin probar nada.
+  - **Lección:** una fixture **prepara y entrega** (`@pytest.fixture` + `return`); un test **verifica** (`test_` + `assert`). Hay que mirar **cuántos tests se recolectaron**, no solo si están en verde.
+  - **Error de concepto:** con `PRAC_MAX_REINTENTOS="tres"`, el usuario esperaba que pydantic usara el valor por defecto (3) o guardara el texto. En realidad `ConfigPractica()` **lanza `ValidationError` y no crea el objeto** (*fail fast*). El test debe usar `with pytest.raises(ValidationError):`, no un `assert`.
+  - **Lección:** usar el valor por defecto en silencio ante un dato inválido es el anti-patrón del legado; fallar al arrancar es lo correcto.
+  - **Lección:** `# noqa: F401` se quita cuando el import pasa a usarse.
+
 ### Próximas tareas
 - **Antes de H2.2:** hacer los ejercicios de `practica/` (al menos el 01, el 02 y el 04).
 - **H2.2:** logging estructurado con `run_id`.

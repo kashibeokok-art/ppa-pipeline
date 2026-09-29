@@ -225,6 +225,69 @@ def sin_archivo_env(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
 
 ---
 
+## B.6 Error común: esperar un valor por defecto cuando el dato es inválido
+
+Visto en el ejercicio 04:
+```python
+monkeypatch.setenv("PRAC_MAX_REINTENTOS", "tres")
+config = ConfigPractica()            # 💥 lanza ValidationError aquí
+assert config.max_reintentos == 3    # nunca se ejecuta
+```
+**Idea equivocada:** "si el valor es inválido, pydantic usa el valor por defecto" (o "guarda el texto").
+**Realidad:** pydantic **no crea el objeto**. Ante un dato inválido, falla al arrancar (*fail fast*).
+
+| Si ante un dato inválido… | Consecuencia |
+|---|---|
+| se usara el valor por defecto en silencio | Corres con otra configuración **sin enterarte** (el anti-patrón del legado) |
+| se guardara el texto | El error aparece después, lejos del origen |
+| **se niega a arrancar** ✅ | Te enteras de inmediato, en la línea exacta y con el motivo |
+
+⚠️ **Segundo error frecuente:** escribir `config = ConfigPractica()` **dentro** de `pytest.raises`. ruff lo marca como `F841` (variable asignada y nunca usada) y bloquea el commit. Dentro de `pytest.raises` el objeto **nunca se crea**, así que no hay nada que guardar: se llama solo `ConfigPractica()`.
+
+**Test correcto (patrón 3):**
+```python
+def test_reintentos_invalidos_fallan(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Un número de reintentos que no es entero debe impedir que arranque la configuración."""
+    monkeypatch.setenv("PRAC_MAX_REINTENTOS", "tres")
+
+    with pytest.raises(ValidationError):
+        ConfigPractica()
+```
+
+## B.7 Error común: una función que pytest ignora en silencio
+
+Visto en el ejercicio 05:
+```python
+def archivo_con_lineas_vacias(tmp_path: Path) -> Path:   # sin @pytest.fixture, sin "test_"
+    ruta = tmp_path / "lineas_vacias.txt"
+    ruta.write_text("8\n\n17\n\n", encoding="utf-8")
+    assert leer_horas(ruta) == [8, 17]                    # nunca se ejecuta
+```
+pytest mostró `collected 2 items` y `2 passed`: **todo verde, pero esta función nunca corrió.**
+
+| | Fixture | Test |
+|---|---|---|
+| Para qué | **Preparar** y entregar | **Verificar** |
+| Marca | `@pytest.fixture` | Nombre con prefijo `test_` |
+| Termina con | `return` | `assert` |
+| ¿Quién la llama? | pytest, cuando un test la pide por su nombre | pytest, automáticamente |
+
+**Forma correcta:** dos funciones separadas.
+```python
+@pytest.fixture
+def archivo_con_lineas_vacias(tmp_path: Path) -> Path:
+    ruta = tmp_path / "lineas_vacias.txt"
+    ruta.write_text("8\n\n17\n\n", encoding="utf-8")
+    return ruta
+
+
+def test_ignora_lineas_vacias(archivo_con_lineas_vacias: Path) -> None:
+    assert leer_horas(archivo_con_lineas_vacias) == [8, 17]
+```
+🧠 **Lección:** revisa siempre **cuántos tests se recolectaron** (`collected N items`). Un test que no corre es igual que no tener test.
+
+---
+
 ## Parte C: ahora practica
 
 Ve a [`practica/README.md`](../../practica/README.md). Los ejercicios siguen **este mismo orden**:
