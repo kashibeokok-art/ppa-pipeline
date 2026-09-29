@@ -37,6 +37,12 @@ El CI no ejecuta esta carpeta (solo `tests/`), así que los ejercicios sin termi
 | `NotImplementedError` | La función todavía no está escrita (normal al empezar un ejercicio: fase roja de TDD) |
 | `collected N items` con un N menor al esperado | Algún test **no se está ejecutando**: revisa que empiece con `test_` y que la fixture tenga `@pytest.fixture` |
 
+## Ejecutar solo los tests de un paso (por nombre)
+```powershell
+uv run pytest tests/test_logging_setup.py -k run_id -v
+```
+`-k run_id` ejecuta solo los tests cuyo nombre contiene "run_id". Sirve para avanzar de a un paso.
+
 ## Ver qué tests encuentra pytest, sin ejecutarlos
 ```powershell
 uv run pytest practica/test_ejercicio_05_archivos.py --collect-only -q

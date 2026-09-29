@@ -28,6 +28,8 @@ uv run ruff format --check --diff . # muestra qué cambiaría
 | **Línea demasiado larga en un texto** (`E501`) | ❌ Hay que acortarla a mano (bloquea el commit) |
 | Nombre inexistente (`F821`) | ❌ Hay que corregir el código |
 | Variable asignada y nunca usada (`F841`) | ❌ Hay que quitar la asignación a mano (ej. `config = X()` dentro de `pytest.raises` → solo `X()`) |
+| Expresión inútil (`B018`), ej. `1 / 0` sola en una línea | ❌ A mano. Si es a propósito, asígnala a `_`: `_ = 1 / 0` (`_` = "variable que no voy a usar") |
+| Import que se agregó en el archivo equivocado (`F401`) | ✅ `--fix` lo borra, pero conviene entender **dónde** se usa: cada archivo importa solo lo suyo |
 
 ## Revisar y corregir solo la carpeta de práctica
 ```powershell

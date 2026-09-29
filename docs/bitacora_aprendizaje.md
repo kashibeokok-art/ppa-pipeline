@@ -245,9 +245,31 @@ El proyecto se reconstruye desde cero en cualquier máquina (`uv sync --locked`)
   - **Lección:** usar el valor por defecto en silencio ante un dato inválido es el anti-patrón del legado; fallar al arrancar es lo correcto.
   - **Lección:** `# noqa: F401` se quita cuando el import pasa a usarse.
 
+- ✅ **Práctica completa: 23/23.** Los 5 ejercicios resueltos, incluido tu primera clase propia (ejercicio 04) y tu primera fixture (ejercicio 05).
+
+### Paso 17: Logging estructurado con `run_id` (H2.2) 🔄
+- **Qué:** `logging_setup.py` con 4 piezas: `nuevo_run_id()`, `FormateadorJson` (sobrescribe `format`), `FiltroRunId` (con `__init__` y `filter`) y `configurar_logging()`.
+- **Por qué:** los logs en JSON con un **correlation ID** permiten rastrear una ejecución completa y consultarla con herramientas de observabilidad. En el legado había `print` y separadores como `"2222…"`.
+- **Cómo:** los tests ya vienen escritos (especificación) y el usuario implementa 4 pasos con TDD. El esqueleto se verificó antes con mypy strict, 6/6 tests y ruff.
+- 🧠 **POO nueva:** sobrescribir un método, `self`, `__init__`, `super()`. Lección: [07_logging_estructurado.md](aprendizaje/07_logging_estructurado.md).
+- **Preguntas de comprobación de la lección 07** (resultado: 1 correcta, 2 parciales, 2 con confusión de concepto). Respuestas modelo en la sección 9 de la lección. Ideas clave corregidas:
+  - El `run_id` es único **por ejecución** (no por línea) y responde **qué ejecución**. Cuándo, dónde y gravedad vienen de otros campos.
+  - El nivel es un **umbral**: se escribe ese nivel **y los más graves**.
+  - `self.run_id` se guarda **en el objeto** (cada instancia tiene el suyo) y **en memoria**, no en la clase ni en un archivo.
+  - Sobrescribir = redefinir un **método** del padre; base del **polimorfismo**.
+
+- ✅ **Los 4 pasos implementados por el usuario: 6/6**, 24 tests en el proyecto, mypy ✅. Probado de verdad: JSON válido, tildes legibles, `run_id` presente y `debug` filtrado con nivel INFO.
+- **Lección real:** con `logger.exception(...)` **se perdía el detalle del error** (sin `ZeroDivisionError` ni línea), porque ningún test lo exigía. Se corrige con TDD: primero un test con `sys.exc_info()`, luego `if record.exc_info: datos["error"] = self.formatException(...)`, un método **heredado**. **Hábito:** después de ver verde, probar el código real con casos no cubiertos.
+
+- ✅ **Campo `error` agregado con TDD: 7/7.** El usuario **comprobó él mismo que el test protege**: al comentar las 2 líneas no fallaba nada, porque el test aún no estaba en el archivo (`collected 6`); con el test agregado, falla sin el código y pasa con él. El log de error ahora incluye el *traceback* completo.
+- **Errores de ruff al cerrar:**
+  - `B018` por `1 / 0` suelto (el snippet de Claude estaba mal) → `_ = 1 / 0`.
+  - `import sys` agregado por error también en `src/` (`F401`): cada archivo importa solo lo que usa.
+  - `I001`: faltaba una línea en blanco entre los grupos de imports.
+
 ### Próximas tareas
-- **Antes de H2.2:** hacer los ejercicios de `practica/` (al menos el 01, el 02 y el 04).
-- **H2.2:** logging estructurado con `run_id`.
+- **H2.2:** limpieza (quitar `noqa`, TODO, `import sys` de src; `_ = 1 / 0`; `ruff --fix` y `format`); commit y push; verificar el CI.
+- **H2.3:** CLI con `typer` y códigos de salida.
 - **H2.3:** CLI con `typer` y códigos de salida.
 - **H2:** configuración (`.env`, `pydantic-settings`, primera **clase**) y observabilidad (logging con `run_id`).
 
