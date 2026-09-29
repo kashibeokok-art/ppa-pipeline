@@ -267,8 +267,17 @@ El proyecto se reconstruye desde cero en cualquier máquina (`uv sync --locked`)
   - `import sys` agregado por error también en `src/` (`F401`): cada archivo importa solo lo que usa.
   - `I001`: faltaba una línea en blanco entre los grupos de imports.
 
+- ✅ **H2.2 en commit** (`7702dd7`). Los `noqa` y `TODO` de `logging_setup.py` se mantienen por decisión del usuario, pendientes para más adelante.
+- **Auditoría de git** (lo que faltaba):
+  - commits sin subir (sin respaldo ni CI);
+  - `.gitignore` sin `data/` por ubicación ni `logs/`, `*.pbix` y `desktop.ini`;
+  - README vacío en un repositorio público;
+  - sin licencia.
+  - 🧠 **Lecciones:** ignorar **por ubicación**; `!` crea excepciones (`!.env.example`); un repo público **sin LICENSE** = todos los derechos reservados.
+
 ### Próximas tareas
-- **H2.2:** limpieza (quitar `noqa`, TODO, `import sys` de src; `_ = 1 / 0`; `ruff --fix` y `format`); commit y push; verificar el CI.
+- `git push` de los 3 commits; completar el `.gitignore`; README mínimo; decidir la licencia.
+- **H2.3:** CLI con `typer` y códigos de salida.
 - **H2.3:** CLI con `typer` y códigos de salida.
 - **H2.3:** CLI con `typer` y códigos de salida.
 - **H2:** configuración (`.env`, `pydantic-settings`, primera **clase**) y observabilidad (logging con `run_id`).

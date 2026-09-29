@@ -102,6 +102,19 @@ git mv <ruta_actual> <ruta_nueva>
 ```
 Mueve el archivo y deja el cambio en *staging*. Git lo registra como un movimiento, no como "borrado + archivo nuevo", y se conserva su historial.
 
+## Probar varias rutas contra el .gitignore de una vez
+```powershell
+git check-ignore -v data/bronze/cmg.json logs/pipeline.log reporte.pbix .env.local
+```
+Muestra cada ruta ignorada junto con la regla que la ignora. Las que no aparecen **no** están ignoradas.
+
+## Excepciones en el .gitignore
+```gitignore
+.env.*
+!.env.example
+```
+El `!` crea una **excepción**: ignora `.env.local`, `.env.prod`, etc., pero **no** la plantilla `.env.example`.
+
 ## Tipos de mensaje (Conventional Commits)
 | Prefijo | Uso |
 |---|---|
@@ -110,9 +123,17 @@ Mueve el archivo y deja el cambio en *staging*. Git lo registra como un movimien
 | `docs:` | Documentación |
 | `chore:` | Mantenimiento o configuración |
 | `test:` | Tests |
-| `refactor:` | Mejora sin cambiar el comportamiento |
+| `refactor:` | Mejora sin cambiar el comportamiento (ej. limpiar `noqa` y `TODO` resueltos); los tests deben seguir pasando igual |
 
 Con ámbito opcional: `feat(domain): asigna bloque horario según RN-01`
+
+**Estilo recomendado para la descripción:** en minúscula y en **imperativo** (como una orden): `feat(logging): agrega logging estructurado con run_id`, no `Se Añade...`.
+
+## Ver cuántos commits faltan por subir a GitHub
+```powershell
+git --no-pager log --oneline origin/main..HEAD
+```
+Lista los commits que están en tu PC pero todavía no en GitHub. Si no muestra nada, está todo subido.
 
 ## Finales de línea (LF): `.gitattributes`
 Crear `.gitattributes` en la raíz:
