@@ -543,7 +543,17 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` hecho
     - 🟡 Sin LICENSE (decisión del usuario: ninguna vs. MIT).
     - ✅ `.env` y `OLD/` nunca se commitearon.
   - Detalle anterior de H2.2: **Los 4 pasos implementados por el usuario, 6/6 ✅.** Pendiente: el test + campo `error` (`record.exc_info` → `self.formatException`); la prueba real con `1/0` mostró que se perdía el traceback. También quitar `# noqa: F401` y los TODO, y hacer commit/push. Detalle original: Logging estructurado con `run_id`. Claude creó `tests/test_logging_setup.py` (6 tests, la especificación) y el esqueleto `src/ppa_pipeline/logging_setup.py` con 4 TODO (paso 1 `nuevo_run_id`, paso 2 `FormateadorJson.format`, paso 3 `FiltroRunId.__init__/filter`, paso 4 `configurar_logging`). La implementación de referencia se verificó en el scratchpad (mypy strict ✅, 6/6 ✅). Los imports llevan `# noqa: F401` para que el `ruff --fix` de pre-commit no los borre; hay que quitarlos al terminar. ⚠️ No hacer push hasta 6/6: el CI fallaría. En los tests se usa `registro.__dict__["run_id"]` porque `getattr(x, "const")` dispara B009
-  - [ ] H2.3 CLI `typer` + códigos de salida
+  - [~] H2.3 CLI `typer` + códigos de salida. Claude creó:
+    - esqueletos `src/ppa_pipeline/cli.py` (TODO 3a `config`, 3b `try`/`except` + `typer.Exit(1)`) y `src/ppa_pipeline/domain/periodo.py` (TODO paso 2 `parsear_periodo` con regex `^(\d{4})-(\d{2})$`);
+    - tests `tests/test_cli.py` (4, con `CliRunner`; los logs se leen de `resultado.stderr`) y `tests/domain/test_periodo.py` (9).
+    - Pasos del usuario: 1) `uv add typer` + `[project.scripts] ppa = "ppa_pipeline.cli:app"` + `uv sync` (y quitar `main` de `__init__.py`); 2) `parsear_periodo`; 3) `cli.py`; 4) probar `$LASTEXITCODE`.
+    - Referencia verificada en el scratchpad: 38/38, mypy ✅ (con typer), ruff ✅.
+    - ⚠️ Mientras typer no esté instalado, los tests fallan al importar: no hacer push hasta que esté en verde.
+  - Decisiones del usuario (2026-09-29): README y LICENSE **postergados** (no insistir hasta H11). `.gitignore` completado.
+  - 🎤 **Preparación de entrevista (2026-09-29):** material de estudio en `docs/entrevista/` (**local; no se sube**: ver la decisión pendiente abajo). Criterio: distinguir construido / diseñado / conozco. Los detalles personales (CV, correo, envíos) están en la **memoria privada de Claude**, no en este archivo público. **Próxima sesión:** preguntar cómo le fue y qué preguntaron, para reforzar esos temas.
+  - Protección de datos personales: `*.pdf`, `CV*.pdf` y `docs/entrevista/cv_defensa.md` están en `.gitignore`.
+  - ⚠️ **DECISIÓN PENDIENTE DEL USUARIO (2026-09-30): `OLD/` en git.** El usuario quitó `OLD/` del `.gitignore` y pidió subirlo. Claude **NO lo subió**: `OLD/` contiene en texto plano la contraseña de Azure SQL, el servidor y el usuario (`funciones.py:1540-1547`, `Diccionario_generadores.py:9-16`), el nombre del ex empleador y rutas del usuario corporativo. Publicarlo en un repo público es irreversible (los bots recolectan secretos en minutos) y contradice ADR-001/003 y el discurso de entrevista ("no reutilizo código de la empresa"). `OLD/` sigue sin versionar, pero **ya no está ignorado**: un `git add .` lo subiría. Opciones planteadas: (1) volver a ignorarlo (recomendado); (2) repo privado; (3) copia sanitizada, sin secretos, con permiso del ex empleador. **No subir `OLD/` hasta que el usuario elija, informado del riesgo.**
+  - `docs/entrevista/` (guía y conceptos) tampoco se subió: pendiente de que el usuario decida si la quiere pública.
 - [ ] H3 — Ingesta Automatizada → Bronze
 - [ ] H4 — Silver: Retiros Conformados
 - [ ] H5 — Silver: CMg, Inyecciones y Valorización

@@ -9,7 +9,7 @@
 
 En el legado, la configuración estaba **dentro del código**:
 
-- [rutas_config.py](../../OLD/rutas_config.py): rutas absolutas de un usuario (`/mnt/c/Users/adm_tipy/...`), y además crea carpetas **al importarse**.
+- [rutas_config.py](../../OLD/rutas_config.py): rutas absolutas de la cuenta de otro usuario (`/mnt/c/Users/<otro_usuario>/...`), y además crea carpetas **al importarse**.
 - [funciones.py:1540](../../OLD/funciones.py): servidor, usuario y **contraseña** escritos en el código.
 
 Para cambiar una ruta o una clave había que **editar el código**. Y el secreto quedó guardado en cada copia del archivo.

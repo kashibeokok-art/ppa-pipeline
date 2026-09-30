@@ -6,7 +6,6 @@ credenciales.py
 
 # Datos
 Archivos/
-OLD/
 data/
 *.parquet
 *.csv
@@ -35,3 +34,8 @@ logs/
 # Sistema operativo
 desktop.ini
 Thumbs.db
+
+# Documentos personales (datos de contacto y trayectoria: NO van a un repositorio público)
+CV*.pdf
+*.pdf
+docs/entrevista/cv_defensa.md

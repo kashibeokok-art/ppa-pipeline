@@ -34,6 +34,13 @@ $env:Path -split ';'
 ```
 `$env:Path` es la variable de entorno PATH del terminal actual. `-split ';'` la separa en líneas para leerla mejor.
 
+## Ver el código de salida del último programa
+```powershell
+uv run ppa run --periodo 2026-13
+$LASTEXITCODE
+```
+`$LASTEXITCODE` muestra el número que devolvió el último programa: `0` = terminó bien, `1` = falló, `2` = error de uso.
+
 ## Copiar un archivo
 ```powershell
 Copy-Item .env.example .env

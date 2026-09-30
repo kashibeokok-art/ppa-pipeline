@@ -275,9 +275,36 @@ El proyecto se reconstruye desde cero en cualquier máquina (`uv sync --locked`)
   - sin licencia.
   - 🧠 **Lecciones:** ignorar **por ubicación**; `!` crea excepciones (`!.env.example`); un repo público **sin LICENSE** = todos los derechos reservados.
 
+- ✅ `.gitignore` completado por el usuario (`data/`, `logs/`, `*.pbix`…). README y licencia **postergados por decisión del usuario**.
+
+### Paso 18: CLI y códigos de salida (H2.3) 🔄
+- **Qué:** comando `ppa` con `typer`: `ppa config` y `ppa run --periodo AAAA-MM`, más `domain/periodo.py` (`parsear_periodo`, con regex).
+- **Por qué:** un único **punto de entrada**. Ante un error, **fail loud**: log con traceback + **código de salida 1**, para que el orquestador lo detecte. En el legado, los errores se registraban y el programa seguía.
+- **Cómo:** los tests ya vienen escritos (4 de CLI + 9 de periodo). El usuario implementa `parsear_periodo`, `config` y el `try`/`except` de `run`. Verificado con la solución de referencia: 38/38, mypy y ruff limpios.
+- 🧠 **Conceptos:** CLI, entry point, exit codes, fail loud, *swallowing exceptions*, regex, **composición**, `CliRunner`. Lección: [08_cli_y_codigos_de_salida.md](aprendizaje/08_cli_y_codigos_de_salida.md).
+
+### 🎤 Preparación para la entrevista (2026-09-29)
+- [`docs/entrevista/guia_entrevista.md`](entrevista/guia_entrevista.md):
+  - pitch de 60 s;
+  - oferta → qué decir, separando **construido / diseñado / conozco**;
+  - 5 historias STAR reales;
+  - conceptos clave, preguntas técnicas, repaso de SQL, negocio energético;
+  - preguntas para el entrevistador y checklist final.
+- [`docs/entrevista/conceptos_no_practicados.md`](entrevista/conceptos_no_practicados.md): 13 temas aún no construidos (Medallion, ETL/ELT, idempotencia/MERGE, estrella, SCD2, calidad, Parquet/Delta, **Fabric**, Spark, orquestación, Power BI/DAX, gobierno, dbt). Cada uno con qué es, cómo se usa, qué implica y cómo decirlo con honestidad.
+- Ambos documentos se enviaron por correo en HTML.
+
+### 🔐 Sincronizar con GitHub sin publicar secretos (2026-09-30)
+- **Síntoma:** "GitHub no muestra la última actualización".
+- **Causa:** no faltaba un `pull` (GitHub no tenía nada nuevo), faltaba un **`push`**: había 4 commits solo en el PC. `git fetch` + `git status -sb` lo muestran como `ahead 4`.
+- **`OLD/` no se publicó:** contiene la contraseña de la base de datos, el servidor y el usuario en texto plano, además de datos internos del ex empleador. En un repositorio **público** eso es irreversible: aunque luego se borre, queda en el historial y los bots lo recolectan en minutos.
+- **Revisión previa a publicar (*pre-publication review*):** antes de cada push se busca en el diff (`git diff origin/main..HEAD`) si hay contraseñas, servidores, usuarios o datos personales. Se encontró y se generalizó una ruta con una cuenta corporativa.
+- 🧠 **Conceptos:** `fetch` vs. `pull` vs. `push`, *ahead*/*behind*, secret scanning, datos de terceros (propiedad del empleador) vs. datos propios.
+
 ### Próximas tareas
-- `git push` de los 3 commits; completar el `.gitignore`; README mínimo; decidir la licencia.
-- **H2.3:** CLI con `typer` y códigos de salida.
+- Decidir qué hacer con `OLD/` (volver a ignorarlo, repo privado o copia sanitizada).
+- Decidir si `docs/entrevista/` se publica.
+- **H2.3:** completar los pasos 1 a 4.
+- **Cierre de H2:** mini-quiz; recordar los `noqa` y `TODO` de `logging_setup.py`.
 - **H2.3:** CLI con `typer` y códigos de salida.
 - **H2.3:** CLI con `typer` y códigos de salida.
 - **H2:** configuración (`.env`, `pydantic-settings`, primera **clase**) y observabilidad (logging con `run_id`).

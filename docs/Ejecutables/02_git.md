@@ -129,6 +129,21 @@ Con ámbito opcional: `feat(domain): asigna bloque horario según RN-01`
 
 **Estilo recomendado para la descripción:** en minúscula y en **imperativo** (como una orden): `feat(logging): agrega logging estructurado con run_id`, no `Se Añade...`.
 
+## pull vs. push: ¿en qué dirección va?
+| Comando | Dirección | Para qué |
+|---|---|---|
+| `git pull` | GitHub → tu PC | Traer cambios que se subieron desde otro lugar |
+| `git push` | tu PC → GitHub | Subir tus commits |
+
+Si GitHub "no está actualizado", casi siempre falta un **push**, no un pull.
+
+## Comparar tu PC con GitHub (sin cambiar nada)
+```powershell
+git fetch origin
+git status -sb
+```
+`fetch` descarga la información de GitHub **sin modificar tus archivos**. `status -sb` muestra si estás `ahead` (tienes commits sin subir) o `behind` (te faltan commits de GitHub).
+
 ## Ver cuántos commits faltan por subir a GitHub
 ```powershell
 git --no-pager log --oneline origin/main..HEAD
