@@ -44,5 +44,18 @@ uv run pytest -v
 ```
 Si esto pasa en tu PC, lo más probable es que también pase en el CI.
 
+## Simular el CI sobre una copia limpia del último commit
+```powershell
+git worktree add --detach ..\ci_prueba HEAD
+cd ..\ci_prueba
+uv sync --locked
+uv run ruff check .
+uv run mypy
+uv run pytest
+cd ..\"GM ACTUALIZACION"
+git worktree remove --force ..\ci_prueba
+```
+`git worktree` crea una segunda carpeta con **solo lo que está en el commit**, sin tus archivos locales sin commit. Es lo más parecido a lo que ve el CI. Al terminar, `worktree remove` la borra.
+
 ## Ver el resultado
 En GitHub: pestaña **Actions** del repositorio. ✅ verde = pasó · ❌ rojo = falló (haz clic para ver el paso y el error).

@@ -144,6 +144,18 @@ git status -sb
 ```
 `fetch` descarga la información de GitHub **sin modificar tus archivos**. `status -sb` muestra si estás `ahead` (tienes commits sin subir) o `behind` (te faltan commits de GitHub).
 
+## Revisar secretos en lo que vas a subir (antes de cada push)
+```powershell
+git --no-pager diff origin/main..HEAD | Select-String -Pattern "password|PWD=|secret|api_key"
+```
+Busca palabras peligrosas en **todo lo que el push publicaría**. Si aparece algo, no hagas push: corrígelo primero. En un repositorio público, un secreto publicado queda para siempre en el historial.
+
+## Agregar al commit solo archivos específicos (no todo)
+```powershell
+git add .gitignore docs/bitacora_aprendizaje.md
+```
+En vez de `git add .`, nombra los archivos. Así no entran por error carpetas como `OLD/` o archivos a medio terminar.
+
 ## Ver cuántos commits faltan por subir a GitHub
 ```powershell
 git --no-pager log --oneline origin/main..HEAD
