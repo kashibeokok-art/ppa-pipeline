@@ -68,6 +68,12 @@ where.exe uv
 ```
 Debe mostrar `C:\Users\Claud\.local\bin\uv.exe`. Si no muestra nada, el terminal no ve uv.
 
+## Excluir una carpeta de todos los hooks (ej. el legado)
+```yaml
+exclude: ^OLD/
+```
+Va al inicio de `.pre-commit-config.yaml`, al mismo nivel que `default_stages`. Es una expresión regular: `^OLD/` = "todo lo que empieza con OLD/". Así ningún hook (ruff, espacios, fin de archivo) modifica esos archivos.
+
 ## Si los hooks aparecen repetidos al hacer commit
 Algunos hooks no declaran su etapa y corren en `pre-commit` **y** en `commit-msg`. Se corrige con esta línea en el YAML:
 ```yaml

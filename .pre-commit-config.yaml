@@ -2,6 +2,8 @@
 # Instalar: uv run pre-commit install
 default_install_hook_types: [pre-commit, commit-msg]
 default_stages: [pre-commit]
+# El legado (OLD/) es una referencia de solo lectura: ningún hook debe reformatearlo ni "corregirlo".
+exclude: ^OLD/
 
 repos:
   # 1. Higiene general de archivos

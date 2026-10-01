@@ -150,6 +150,19 @@ git --no-pager diff origin/main..HEAD | Select-String -Pattern "password|PWD=|se
 ```
 Busca palabras peligrosas en **todo lo que el push publicaría**. Si aparece algo, no hagas push: corrígelo primero. En un repositorio público, un secreto publicado queda para siempre en el historial.
 
+## Buscar un secreto en TODOS los archivos que se publicarían (versionados + nuevos no ignorados)
+```powershell
+git ls-files; git ls-files --others --exclude-standard
+```
+El primero lista los archivos versionados; el segundo, los archivos nuevos que **no** están ignorados (los que un `git add .` agregaría). Combinados con `Select-String` sirven para buscar una contraseña antes de publicar.
+
+## Respaldar una carpeta y comprobar que la copia es idéntica
+```powershell
+Copy-Item -Recurse OLD Archivos\OLD_original
+(Get-FileHash OLD\funciones.py).Hash -eq (Get-FileHash Archivos\OLD_original\funciones.py).Hash
+```
+`Get-FileHash` calcula la huella SHA-256 de un archivo. Si las huellas son iguales, el contenido es idéntico. Respaldar **antes** de modificar algo es un buen hábito.
+
 ## Agregar al commit solo archivos específicos (no todo)
 ```powershell
 git add .gitignore docs/bitacora_aprendizaje.md

@@ -90,7 +90,7 @@ Si el usuario se traba, Claude escala la ayuda de a poco: **pista → pista más
 1. **Por partes.** Una tarea por vez. Cada parte termina funcionando y probada.
 2. **Greenfield.** Nunca copiar ni importar código de `OLD/`. Claude puede citar `OLD/` para explicar *qué* regla de negocio existe o *qué* error evitar, pero la implementación nace del requerimiento documentado.
 3. **Validación contra el oráculo.** Cuando una regla de negocio esté implementada, se compara el resultado con el de `OLD/`. Si difiere, se investiga: o es un bug nuevo, o es un bug del legado que se corrigió. En ambos casos se registra en §10.
-4. **No tocar `OLD/`.** Es la referencia de solo lectura.
+4. **No tocar `OLD/`.** Es la referencia de solo lectura. Única excepción (ADR-006): las credenciales se redactaron antes de publicarlo. Nunca volver a escribir secretos en `OLD/`.
 5. **Nunca escribir credenciales** en código, en este archivo ni en commits.
 6. **Operaciones destructivas en SQL** (DROP, TRUNCATE, DELETE masivo) → confirmar con el usuario antes.
 7. **Convivencia con producción:** el sistema nuevo escribe en **esquemas nuevos** (`stg`, `gold`, `ops`), nunca en las tablas `dbo.*` del legado, hasta el corte oficial (*cutover*).
@@ -171,7 +171,7 @@ Portal: `https://portal.api.coordinador.cl` (Red Hat 3scale). Autenticación con
 - La API "Medidas" (`/medidas-v2/measurement`) entrega medidas por punto de medida del **propio coordinado**. No reemplaza el balance de mercado completo.
 - `transferencia-economica-nacional/zonal` son **peajes de transmisión** (VATT, IT). No son energía retirada ni inyectada.
 
-### 4.3 Tablas SQL destino (Azure SQL, BD `dw_ppa`, schema `dbo`)
+### 4.3 Tablas SQL destino (Azure SQL, BD del legado, schema `dbo`)
 
 `Contratos`, `EstadisticasRetirosV2`, `RetiroBloques`, `RetiroHistoricoMensual`, `BalanceGenerador`,
 `MaestroSubestaciones`, `EmpresaSubdivision`, `DiccionarioSuministradores`.
@@ -552,8 +552,11 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` hecho
   - Decisiones del usuario (2026-09-29): README y LICENSE **postergados** (no insistir hasta H11). `.gitignore` completado.
   - 🎤 **Preparación de entrevista (2026-09-29):** material de estudio en `docs/entrevista/` (**local; no se sube**: ver la decisión pendiente abajo). Criterio: distinguir construido / diseñado / conozco. Los detalles personales (CV, correo, envíos) están en la **memoria privada de Claude**, no en este archivo público. **Próxima sesión:** preguntar cómo le fue y qué preguntaron, para reforzar esos temas.
   - Protección de datos personales: `*.pdf`, `CV*.pdf` y `docs/entrevista/cv_defensa.md` están en `.gitignore`.
-  - ⚠️ **DECISIÓN PENDIENTE DEL USUARIO (2026-09-30): `OLD/` en git.** El usuario quitó `OLD/` del `.gitignore` y pidió subirlo. Claude **NO lo subió**: `OLD/` contiene en texto plano la contraseña de Azure SQL, el servidor y el usuario (`funciones.py:1540-1547`, `Diccionario_generadores.py:9-16`), el nombre del ex empleador y rutas del usuario corporativo. Publicarlo en un repo público es irreversible (los bots recolectan secretos en minutos) y contradice ADR-001/003 y el discurso de entrevista ("no reutilizo código de la empresa"). `OLD/` sigue sin versionar, pero **ya no está ignorado**: un `git add .` lo subiría. Opciones planteadas: (1) volver a ignorarlo (recomendado); (2) repo privado; (3) copia sanitizada, sin secretos, con permiso del ex empleador. **No subir `OLD/` hasta que el usuario elija, informado del riesgo.**
-  - `docs/entrevista/` (guía y conceptos) tampoco se subió: pendiente de que el usuario decida si la quiere pública.
+  - ✅ **Decisión del usuario (2026-09-30), informado del riesgo: `OLD/` se publica y `docs/entrevista/` no** (ver ADR-006).
+    - `OLD/` se versionó con **las credenciales redactadas** (servidor, base de datos, usuario y contraseña → `'<REDACTADO>'` en `funciones.py:1540-1543` y `Diccionario_generadores.py:9-12`). El resto del legado queda igual.
+    - La **copia original intacta** está en `Archivos/OLD_original_con_credenciales/` (ignorada por git).
+    - `.pre-commit-config.yaml` tiene `exclude: ^OLD/`, para que ningún hook reformatee el legado.
+    - `docs/entrevista/` completa está en el `.gitignore`.
 - [ ] H3 — Ingesta Automatizada → Bronze
 - [ ] H4 — Silver: Retiros Conformados
 - [ ] H5 — Silver: CMg, Inyecciones y Valorización
@@ -586,7 +589,7 @@ Formato: `ADR-NNN · fecha · decisión · alternativas · motivo`
   - Solo **datos públicos** del CEN, sin datos ni tablas corporativas.
   - Servidor SQL propio (SQL Server Developer local o Azure SQL gratuito; se decide en H8).
   - El repositorio puede ser **público** en GitHub.
-  - El servidor `dw_ppa` y las tablas `dbo.*` del legado no se usan. §4.3 queda solo como referencia de diseño.
+  - El servidor SQL del legado y sus tablas `dbo.*` no se usan. §4.3 queda solo como referencia de diseño.
   - La credencial antigua no se porta (H0.1 no aplica).
   - Datos no públicos del legado (p. ej. el Excel `diccionario_suministradores`) deben reemplazarse por fuentes públicas o por datos propios de referencia.
 - **ADR-004 · 2026-09-27 · Dominio contratos.** Decisiones:
@@ -612,6 +615,15 @@ Formato: `ADR-NNN · fecha · decisión · alternativas · motivo`
     - `dim_empresa` conformada (RUT), compartida por los dominios, para calcular el balance del suministrador.
     - Evaluar un solo `fct_energia` con tipo inyección/retiro.
     - Volumen: el grano de 15 min multiplica ×4 las filas (evaluar columnstore / incremental refresh).
+- **ADR-006 · 2026-09-30 · Publicar `OLD/` en el repo público, con las credenciales redactadas.**
+  - **Decisión del usuario:** `OLD/` se publica y `docs/entrevista/` no. Instrucción explícita del usuario: **"No subas las credenciales de SQL, elimínalas antes de subir el archivo"**. Se tomó después de que Claude explicara los riesgos: secretos, código del ex empleador y coherencia con el discurso de entrevista.
+  - **Alternativas:** mantenerlo ignorado (recomendación inicial de Claude), un repo privado, o publicarlo tal cual.
+  - **Ejecución:** se reemplazaron solo los 4 valores de conexión (servidor, base de datos, usuario, contraseña) por `'<REDACTADO>'`, porque no aportan al portafolio y publicarlos expone un servidor de terceros. El resto del código queda idéntico, así que el "antes y después" se ve completo. La copia original queda local en `Archivos/OLD_original_con_credenciales/` (ignorada). pre-commit excluye `^OLD/`.
+  - **Consecuencias:**
+    - El legado queda visible como evidencia del "antes".
+    - Siguen visibles el nombre del ex empleador y rutas corporativas (decisión del usuario).
+    - Para la entrevista: "OLD/ es el legado de referencia, publicado sin credenciales; el proyecto nuevo no reutiliza su código".
+    - `OLD/` ya no está ignorado: **nunca escribir secretos ahí**.
 - _(siguiente: confirmar el stack de §6.3 al iniciar H1)_
 
 ---

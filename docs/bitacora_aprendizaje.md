@@ -300,9 +300,23 @@ El proyecto se reconstruye desde cero en cualquier máquina (`uv sync --locked`)
 - **Revisión previa a publicar (*pre-publication review*):** antes de cada push se busca en el diff (`git diff origin/main..HEAD`) si hay contraseñas, servidores, usuarios o datos personales. Se encontró y se generalizó una ruta con una cuenta corporativa.
 - 🧠 **Conceptos:** `fetch` vs. `pull` vs. `push`, *ahead*/*behind*, secret scanning, datos de terceros (propiedad del empleador) vs. datos propios.
 
+### 🧹 Publicar el legado sin secretos (2026-09-30, ADR-006)
+- **Decisión del usuario:** `OLD/` se publica como evidencia del "antes", pero **sin las credenciales de SQL**. `docs/entrevista/` queda privada.
+- **Cómo se hizo (redacción, *redaction*):**
+  1. **Respaldo primero:** copia intacta en `Archivos/OLD_original_con_credenciales/` (ignorada por git), verificada con SHA-256: 19/19 archivos idénticos.
+  2. **Se reemplazaron solo 4 valores** (servidor, base de datos, usuario, contraseña) por `'<REDACTADO>'`. Diff: 4 líneas por archivo; el código sigue siendo Python válido.
+  3. **Escaneo de todo lo que se publica** buscando restos (contraseña, servidor, usuario). También se generalizó el nombre de la base de datos en `CLAUDE.md`.
+  4. **pre-commit excluye `^OLD/`**, para que ningún hook reformatee el legado (sigue siendo una referencia fiel).
+- 🧠 **Conceptos:**
+  - *Redaction*: ocultar el dato sensible y conservar la estructura.
+  - *Backup before destructive change*: respaldar antes de modificar.
+  - **Secretos de terceros**: aunque la credencial esté obsoleta, el servidor no es tuyo, así que no se publica.
+  - Un `.gitignore` deja de proteger una carpeta en cuanto la sacas de él: **nunca más escribir secretos en `OLD/`**.
+- 🎤 **Para la entrevista:** *"OLD/ es mi legado de referencia, publicado sin credenciales. El proyecto nuevo no reutiliza su código: lo usé como especificación y como oráculo de pruebas."*
+
 ### Próximas tareas
-- Decidir qué hacer con `OLD/` (volver a ignorarlo, repo privado o copia sanitizada).
-- Decidir si `docs/entrevista/` se publica.
+- **H2.3:** CLI con `typer` (`uv add typer`, pasos 1 a 4).
+- **Cierre de H2:** mini-quiz; recordar los `noqa` y `TODO` de `logging_setup.py`.
 - **H2.3:** completar los pasos 1 a 4.
 - **Cierre de H2:** mini-quiz; recordar los `noqa` y `TODO` de `logging_setup.py`.
 - **H2.3:** CLI con `typer` y códigos de salida.
